@@ -3,12 +3,41 @@ let playerCount = 0;
 let bankerCount = 0;
 let tieCount = 0;
 
+let strategyPerformance = {
+    'The Cake': { wins: 0, losses: 0 },
+    'ZachFortune': { wins: 0, losses: 0 },
+    'Mr. Toad': { wins: 0, losses: 0 },
+    'The Marcos': { wins: 0, losses: 0 }
+};
+
 function recordResult(result) {
     history.push(result);
     updateCounts(result);
+    const winningStrategy = determineWinningStrategy(result);
+    updateStrategyPerformance(winningStrategy);
+    updateHistoryTable(winningStrategy);
+    updatePredictions();
+    updateChart();
+    updatePerformanceTable();
+}
+
+function resetGame() {
+    history = [];
+    playerCount = 0;
+    bankerCount = 0;
+    tieCount = 0;
+
+    strategyPerformance = {
+        'The Cake': { wins: 0, losses: 0 },
+        'ZachFortune': { wins: 0, losses: 0 },
+        'Mr. Toad': { wins: 0, losses: 0 },
+        'The Marcos': { wins: 0, losses: 0 }
+    };
+
     updateHistoryTable();
     updatePredictions();
     updateChart();
+    updatePerformanceTable();
 }
 
 function updateCounts(result) {
@@ -17,11 +46,11 @@ function updateCounts(result) {
     if (result === 'T') tieCount++;
 }
 
-function updateHistoryTable() {
+function updateHistoryTable(winningStrategy = '') {
     const tableBody = document.getElementById('history-table-body');
     tableBody.innerHTML = '';
     history.forEach((result, index) => {
-        const row = `<tr><td>${index + 1}</td><td>${result}</td></tr>`;
+        const row = `<tr><td>${index + 1}</td><td>${result}</td><td>${winningStrategy}</td></tr>`;
         tableBody.innerHTML += row;
     });
 }
@@ -56,6 +85,42 @@ function predictNextHand() {
     return predictions;
 }
 
+function determineWinningStrategy(result) {
+    const predictions = predictNextHand();
+    let winningStrategy = '';
+
+    for (const strategy in predictions) {
+        if (predictions[strategy] === result) {
+            strategyPerformance[strategy].wins++;
+            winningStrategy = strategy;
+        } else {
+            strategyPerformance[strategy].losses++;
+        }
+    }
+
+    return winningStrategy;
+}
+
+function updateStrategyPerformance(winningStrategy) {
+    if (winningStrategy) {
+        strategyPerformance[winningStrategy].wins++;
+    }
+}
+
+function updatePerformanceTable() {
+    const tableBody = document.getElementById('performance-table-body');
+    tableBody.innerHTML = '';
+    
+    const sortedStrategies = Object.keys(strategyPerformance).sort((a, b) => {
+        return strategyPerformance[b].wins - strategyPerformance[a].wins;
+    });
+
+    sortedStrategies.forEach(strategy => {
+        const row = `<tr><td>${strategy}</td><td>${strategyPerformance[strategy].wins}</td><td>${strategyPerformance[strategy].losses}</td></tr>`;
+        tableBody.innerHTML += row;
+    });
+}
+
 function updateChart() {
     const ctx = document.getElementById('myChart').getContext('2d');
     new Chart(ctx, {
@@ -77,3 +142,6 @@ function updateChart() {
         }
     });
 }
+
+// Initialize the game with empty tables
+resetGame();
