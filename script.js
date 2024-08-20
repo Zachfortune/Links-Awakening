@@ -17,7 +17,7 @@ function recordResult(result) {
     updateStrategyPositions(result);
     updatePredictions();
     updateChart();
-    updateStrategyStats();
+    updateStrategyStats(); // Update the statistics after all other updates
 }
 
 function updateCounts(result) {
@@ -39,13 +39,12 @@ function updateStrategyPositions(result) {
     for (const strategy in strategies) {
         const strategyData = strategies[strategy];
         
-        // If the result is Tie, do not advance the position but still update streaks if it necessary
+        // If the result is a Tie, do not advance the position or update streaks
         if (result === 'T') {
-            // No position change, no streaks change for a Tie
             continue;  // Move to the next strategy
         }
 
-        // If the result matches the current prediction, it's a win
+        // Check if the current position's prediction matches the result
         if (strategyData.sequence[strategyData.position] === result) {
             strategyData.wins++;
             strategyData.winStreak++;
