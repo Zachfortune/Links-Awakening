@@ -98,7 +98,7 @@ button[delete] {
     padding: 10px;
     flex: 1;
     min-width: 200px;
-    color: white; /* Ensures text is readable */
+    color: white; /* Ensures text is readablle */
 }
 
 #strategy-stats h3 {
@@ -114,6 +114,6 @@ button[delete] {
 }
 
 .dark-mode #strategy-stats div {
-    background-color: #222; /* Even darker gray in dark modee */
+    background-color: #222; /* Even darker gray in dark mode */
     border: 1px solid #555;
 }
