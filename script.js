@@ -4,10 +4,10 @@ let bankerCount = 0;
 let tieCount = 0;
 
 const strategies = {
-    'The Cake': { sequence: ['B', 'B', 'P', 'B', 'B', 'P', 'P', 'B'], position: 0 },
-    'ZachFortune': { sequence: ['B', 'B', 'P', 'P', 'B', 'P', 'B'], position: 0 },
-    'Mr. Toad': { sequence: ['P', 'B', 'P', 'B', 'P', 'B', 'P', 'B'], position: 0 },
-    'The Marcos': { sequence: ['P', 'B', 'P', 'P', 'B', 'B'], position: 0 }
+    'The Cake': { sequence: ['B', 'B', 'P', 'B', 'B', 'P', 'P', 'B'], position: 0, wins: 0, losses: 0, winStreak: 0, lossStreak: 0, maxWinStreak: 0, maxLossStreak: 0 },
+    'ZachFortune': { sequence: ['B', 'B', 'P', 'P', 'B', 'P', 'B'], position: 0, wins: 0, losses: 0, winStreak: 0, lossStreak: 0, maxWinStreak: 0, maxLossStreak: 0 },
+    'Mr. Toad': { sequence: ['P', 'B', 'P', 'B', 'P', 'B', 'P', 'B'], position: 0, wins: 0, losses: 0, winStreak: 0, lossStreak: 0, maxWinStreak: 0, maxLossStreak: 0 },
+    'The Marcos': { sequence: ['P', 'B', 'P', 'P', 'B', 'B'], position: 0, wins: 0, losses: 0, winStreak: 0, lossStreak: 0, maxWinStreak: 0, maxLossStreak: 0 }
 };
 
 function recordResult(result) {
@@ -17,6 +17,7 @@ function recordResult(result) {
     updateStrategyPositions(result);
     updatePredictions();
     updateChart();
+    updateStrategyStats();
 }
 
 function updateCounts(result) {
@@ -45,9 +46,21 @@ function updateStrategyPositions(result) {
 
         // If the result matches the current prediction, reset the position
         if (strategyData.sequence[strategyData.position] === result) {
+            strategyData.wins++;
+            strategyData.winStreak++;
+            strategyData.lossStreak = 0;
+            if (strategyData.winStreak > strategyData.maxWinStreak) {
+                strategyData.maxWinStreak = strategyData.winStreak;
+            }
             strategyData.position = 0;  // Reset if it's a win
         } else {
             // Otherwise, move to the next position
+            strategyData.losses++;
+            strategyData.lossStreak++;
+            strategyData.winStreak = 0;
+            if (strategyData.lossStreak > strategyData.maxLossStreak) {
+                strategyData.maxLossStreak = strategyData.lossStreak;
+            }
             strategyData.position = (strategyData.position + 1) % strategyData.sequence.length;
         }
     }
@@ -94,6 +107,26 @@ function updateChart() {
             }
         }
     });
+}
+
+function updateStrategyStats() {
+    const strategyStats = document.getElementById('strategy-stats');
+    let statsHTML = '';
+
+    for (const strategy in strategies) {
+        const strategyData = strategies[strategy];
+        statsHTML += `
+            <div>
+                <h3>${strategy}</h3>
+                <p>Wins: ${strategyData.wins}</p>
+                <p>Losses: ${strategyData.losses}</p>
+                <p>Win Streak: ${strategyData.maxWinStreak}</p>
+                <p>Loss Streak: ${strategyData.maxLossStreak}</p>
+            </div>
+        `;
+    }
+
+    strategyStats.innerHTML = statsHTML;
 }
 
 // Dark Mode Toggle
