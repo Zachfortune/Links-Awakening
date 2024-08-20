@@ -159,7 +159,7 @@ function updateStrategyStats() {
         }
     });
 
-    // Generate the HTML for the stats
+    // Generate the HTML2 for the stats
     for (const strategy in stats) {
         statsHTML += `
             <div>
