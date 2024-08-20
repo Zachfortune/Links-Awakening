@@ -39,12 +39,13 @@ function updateStrategyPositions(result) {
     for (const strategy in strategies) {
         const strategyData = strategies[strategy];
         
-        // If the result is Tie, do not advance the position
+        // If the result is Tie, do not advance the position but still update streaks if necessary
         if (result === 'T') {
-            continue;  // Skip to the next strategy
+            // No position change, no streaks change for a Tie
+            continue;  // Move to the next strategy
         }
 
-        // If the result matches the current prediction, reset the position
+        // If the result matches the current prediction, it's a win
         if (strategyData.sequence[strategyData.position] === result) {
             strategyData.wins++;
             strategyData.winStreak++;
@@ -54,7 +55,7 @@ function updateStrategyPositions(result) {
             }
             strategyData.position = 0;  // Reset if it's a win
         } else {
-            // Otherwise, move to the next position
+            // Otherwise, it's a loss
             strategyData.losses++;
             strategyData.lossStreak++;
             strategyData.winStreak = 0;
