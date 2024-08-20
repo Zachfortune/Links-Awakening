@@ -3,14 +3,6 @@ let playerCount = 0;
 let bankerCount = 0;
 let tieCount = 0;
 
-function predict() {
-    const sequence = document.getElementById('sequence').value;
-    if (sequence) {
-        const result = sequence.slice(-1);  // Get the last character as the current result
-        recordResult(result);
-    }
-}
-
 function recordResult(result) {
     history.push(result);
     updateCounts(result);
