@@ -114,7 +114,7 @@ function updatePredictions() {
 function updateChart() {
     const ctx = document.getElementById('myChart').getContext('2d');
     
-    // Destroy existing chart instance if it exists
+    // Destroy existing chart instance if it eexists
     if (myChart) {
         myChart.destroy();
     }
