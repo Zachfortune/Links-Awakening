@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Links Awakening (1.0) - Created by Zach Elness</title>
+    <title>Baccarat Prediction App</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -21,26 +21,29 @@
         h1 {
             text-align: center;
         }
-        .history, .statistics, .input-buttons, .performance {
+        .history {
             margin-bottom: 20px;
         }
-        table {
+        .history-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
         }
-        table th, table td {
+        .history-table th, .history-table td {
             border: 1px solid #ddd;
             padding: 8px;
             text-align: center;
         }
         .input-buttons {
+            margin-bottom: 20px;
             text-align: center;
         }
         .input-buttons button {
             padding: 10px 20px;
             margin: 5px;
             cursor: pointer;
+        }
+        .prediction {
+            text-align: center;
         }
         .chart-container {
             margin-top: 20px;
@@ -52,46 +55,31 @@
 </head>
 <body>
     <div class="container">
-        <h1>Links Awakening (1.0)</h1>
-        <h2>Created by Zach Elness</h2>
-        
+        <h1>Baccarat Prediction App</h1>
         <div class="history">
             <h2>History</h2>
-            <table>
+            <table class="history-table">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>Result</th>
-                        <th>Winning Strategy</th>
                     </tr>
                 </thead>
                 <tbody id="history-table-body">
                 </tbody>
             </table>
         </div>
-        
         <div class="input-buttons">
             <button onclick="recordResult('P')">Player</button>
             <button onclick="recordResult('B')">Banker</button>
             <button onclick="recordResult('T')">Tie</button>
-            <button onclick="resetGame()">Reset</button>
         </div>
-        
-        <div class="performance">
-            <h2>Strategy Performance</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Strategy</th>
-                        <th>Winning Hands</th>
-                        <th>Losing Hands</th>
-                    </tr>
-                </thead>
-                <tbody id="performance-table-body">
-                </tbody>
-            </table>
+        <div class="prediction">
+            <h2>Predictions</h2>
+            <div id="prediction-results">
+                <!-- Predictions will be listed here -->
+            </div>
         </div>
-
         <div class="chart-container">
             <h2>Statistics</h2>
             <canvas id="myChart"></canvas>
