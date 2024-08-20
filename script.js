@@ -65,7 +65,7 @@ class Strategy {
     }
 
     resetStats() {
-        this.position = 0; // Ensure position is reset to the start of the sequence
+        this.position = 0; // Reset position to the start of the sequence
         this.wins = 0;
         this.losses = 0;
         this.currentWinStreak = 0;
@@ -76,7 +76,7 @@ class Strategy {
     }
 
     fullReset() {
-        this.resetStats(); // Reset all stats and sequence position
+        this.resetStats(); // Fully reset all stats and sequence position
     }
 
     getStats() {
@@ -136,12 +136,14 @@ function deleteLastHand() {
     updateStrategyStats();
 
     if (history.length === 0) {
+        console.log("All hands deleted, resetting strategies.");
         fullResetAllStrategies();
         playerCount = 0;
         bankerCount = 0;
         tieCount = 0;
         updateChart();
         updateStrategyStats();
+        updatePredictions(); // Ensure predictions reflect the reset state
     }
 }
 
@@ -250,7 +252,7 @@ function updateStrategyStats() {
     strategyStats.innerHTML = statsHTML;
 }
 
-// Dark Mode Toggle
+// Dark Mode Togglle
 document.getElementById('toggle-dark-mode').addEventListener('click', function() {
     document.body.classList.toggle('dark-mode');
 });
