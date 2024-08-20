@@ -17,7 +17,6 @@ function recordResult(result) {
     updateStrategyPositions(result);
     updatePredictions();
     updateChart();
-    updateBaccaratChart();
 }
 
 function updateCounts(result) {
@@ -39,17 +38,17 @@ function updateStrategyPositions(result) {
     for (const strategy in strategies) {
         const strategyData = strategies[strategy];
         
-        // If the result is Tie, move to the next position without resetting
+        // If the result is Tie, do not advance the position
         if (result === 'T') {
-            strategyData.position = (strategyData.position + 1) % strategyData.sequence.length;
+            continue;  // Skip to the next strategy
+        }
+
+        // If the result matches the current prediction, reset the position
+        if (strategyData.sequence[strategyData.position] === result) {
+            strategyData.position = 0;  // Reset if it's a win
         } else {
-            // If the result matches the current prediction, reset the position
-            if (strategyData.sequence[strategyData.position] === result) {
-                strategyData.position = 0;
-            } else {
-                // Otherwise, move to the next position
-                strategyData.position = (strategyData.position + 1) % strategyData.sequence.length;
-            }
+            // Otherwise, move to the next position
+            strategyData.position = (strategyData.position + 1) % strategyData.sequence.length;
         }
     }
 }
@@ -95,64 +94,6 @@ function updateChart() {
             }
         }
     });
-}
-
-// New function to handle Baccarat chart updates
-function updateBaccaratChart() {
-    // Draw Big Road
-    drawBigRoad();
-    // You can expand these to implement the other charts
-    drawBigEyeBoy();
-    drawSmallRoad();
-    drawCockroachRoad();
-}
-
-function drawBigRoad() {
-    const canvas = document.getElementById('big-road');
-    const ctx = canvas.getContext('2d');
-    const cellSize = 20;
-    let x = 0;
-    let y = 0;
-    let lastResult = '';
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    history.forEach((result, index) => {
-        if (result === 'P' || result === 'B') {
-            if (result !== lastResult && lastResult !== '') {
-                x += cellSize;
-                y = 0;
-            }
-            ctx.fillStyle = result === 'P' ? '#007BFF' : '#DC3545';
-            ctx.beginPath();
-            ctx.arc(x + cellSize / 2, y + cellSize / 2, cellSize / 2 - 2, 0, 2 * Math.PI);
-            ctx.fill();
-            y += cellSize;
-            if (y + cellSize > canvas.height) {
-                x += cellSize;
-                y = 0;
-            }
-            lastResult = result;
-        }
-    });
-}
-
-function drawBigEyeBoy() {
-    const canvas = document.getElementById('big-eye-boy');
-    const ctx = canvas.getContext('2d');
-    // Implement the logic to draw the Big Eye Boy chart
-}
-
-function drawSmallRoad() {
-    const canvas = document.getElementById('small-road');
-    const ctx = canvas.getContext('2d');
-    // Implement the logic to draw the Small Road chart
-}
-
-function drawCockroachRoad() {
-    const canvas = document.getElementById('cockroach-road');
-    const ctx = canvas.getContext('2d');
-    // Implement the logic to draw the Cockroach Road chart
 }
 
 // Dark Mode Toggle
