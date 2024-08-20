@@ -12,11 +12,14 @@ class Strategy {
     }
 
     predict() {
+        console.log(`Predicting for ${this.name}: Position ${this.position}, Prediction ${this.sequence[this.position]}`);
         return this.sequence[this.position];
     }
 
     update(result) {
         if (result === 'T') return; // Ignore ties for strategy update
+
+        console.log(`Updating ${this.name}: Current position ${this.position}, Current result ${result}`);
 
         if (this.predict() === result) {
             this.wins++;
@@ -35,10 +38,14 @@ class Strategy {
             }
             this.position = (this.position + 1) % this.sequence.length;
         }
+
+        console.log(`${this.name} after update: Position ${this.position}, Wins ${this.wins}, Losses ${this.losses}`);
     }
 
     reverseUpdate(result) {
         if (result === 'T') return; // Ignore ties for strategy update
+
+        console.log(`Reversing ${this.name}: Current position ${this.position}, Reversing result ${result}`);
 
         if (this.position === 0) {
             this.position = this.sequence.length - 1;
@@ -54,13 +61,7 @@ class Strategy {
             this.currentLossStreak = Math.max(0, this.currentLossStreak - 1);
         }
 
-        // Recalculate max streaks
-        if (this.currentWinStreak < this.maxWinStreak) {
-            this.maxWinStreak = this.currentWinStreak;
-        }
-        if (this.currentLossStreak < this.maxLossStreak) {
-            this.maxLossStreak = this.currentLossStreak;
-        }
+        console.log(`${this.name} after reverse update: Position ${this.position}, Wins ${this.wins}, Losses ${this.losses}`);
     }
 
     resetStats() {
@@ -71,6 +72,7 @@ class Strategy {
         this.currentLossStreak = 0;
         this.maxWinStreak = 0;
         this.maxLossStreak = 0;
+        console.log(`${this.name} has been reset. Position is now ${this.position}`);
     }
 
     fullReset() {
@@ -144,6 +146,7 @@ function deleteLastHand() {
 }
 
 function fullResetAllStrategies() {
+    console.log("Full reset of all strategies.");
     for (const strategy in strategies) {
         strategies[strategy].fullReset(); // Completely reset all strategies to their initial state
     }
@@ -198,7 +201,7 @@ function updatePredictions() {
 function updateChart() {
     const ctx = document.getElementById('myChart').getContext('2d');
     
-    // Destroy existing chart instancee if it exists
+    // Destroy existing chart instance if it exists
     if (myChart) {
         myChart.destroy();
     }
