@@ -39,7 +39,7 @@ function updateStrategyPositions(result) {
     for (const strategy in strategies) {
         const strategyData = strategies[strategy];
         
-        // If the result is Tie, do not advance the position but still update streaks if necessary
+        // If the result is Tie, do not advance the position but still update streaks if it necessary
         if (result === 'T') {
             // No position change, no streaks change for a Tie
             continue;  // Move to the next strategy
