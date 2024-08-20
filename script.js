@@ -4,11 +4,13 @@ let bankerCount = 0;
 let tieCount = 0;
 
 const strategies = {
-    'The Cake': { sequence: ['B', 'B', 'P', 'B', 'B', 'P', 'P', 'B'], position: 0, wins: 0, losses: 0, winStreak: 0, lossStreak: 0, maxWinStreak: 0, maxLossStreak: 0 },
-    'ZachFortune': { sequence: ['B', 'B', 'P', 'P', 'B', 'P', 'B'], position: 0, wins: 0, losses: 0, winStreak: 0, lossStreak: 0, maxWinStreak: 0, maxLossStreak: 0 },
-    'Mr. Toad': { sequence: ['P', 'B', 'P', 'B', 'P', 'B', 'P', 'B'], position: 0, wins: 0, losses: 0, winStreak: 0, lossStreak: 0, maxWinStreak: 0, maxLossStreak: 0 },
-    'The Marcos': { sequence: ['P', 'B', 'P', 'P', 'B', 'B'], position: 0, wins: 0, losses: 0, winStreak: 0, lossStreak: 0, maxWinStreak: 0, maxLossStreak: 0 }
+    'The Cake': { sequence: ['B', 'B', 'P', 'B', 'B', 'P', 'P', 'B'], position: 0 },
+    'ZachFortune': { sequence: ['B', 'B', 'P', 'P', 'B', 'P', 'B'], position: 0 },
+    'Mr. Toad': { sequence: ['P', 'B', 'P', 'B', 'P', 'B', 'P', 'B'], position: 0 },
+    'The Marcos': { sequence: ['P', 'B', 'P', 'P', 'B', 'B'], position: 0 }
 };
+
+let gameResults = [];
 
 function recordResult(result) {
     history.push(result);
@@ -17,7 +19,8 @@ function recordResult(result) {
     updateStrategyPositions(result);
     updatePredictions();
     updateChart();
-    updateStrategyStats(); // Update the statistics after all other updates
+    saveGameResult(result); // Save each result along with strategy states
+    updateStrategyStats(); // Calculate and update stats
 }
 
 function updateCounts(result) {
@@ -46,24 +49,23 @@ function updateStrategyPositions(result) {
 
         // Check if the current position's prediction matches the result
         if (strategyData.sequence[strategyData.position] === result) {
-            strategyData.wins++;
-            strategyData.winStreak++;
-            strategyData.lossStreak = 0;
-            if (strategyData.winStreak > strategyData.maxWinStreak) {
-                strategyData.maxWinStreak = strategyData.winStreak;
-            }
             strategyData.position = 0;  // Reset if it's a win
         } else {
-            // Otherwise, it's a loss
-            strategyData.losses++;
-            strategyData.lossStreak++;
-            strategyData.winStreak = 0;
-            if (strategyData.lossStreak > strategyData.maxLossStreak) {
-                strategyData.maxLossStreak = strategyData.lossStreak;
-            }
             strategyData.position = (strategyData.position + 1) % strategyData.sequence.length;
         }
     }
+}
+
+function saveGameResult(result) {
+    const strategiesState = {};
+    for (const strategy in strategies) {
+        strategiesState[strategy] = {
+            position: strategies[strategy].position,
+            prediction: strategies[strategy].sequence[strategies[strategy].position],
+            won: strategies[strategy].sequence[strategies[strategy].position] === result
+        };
+    }
+    gameResults.push({ result, strategiesState });
 }
 
 function updatePredictions() {
@@ -111,17 +113,54 @@ function updateChart() {
 
 function updateStrategyStats() {
     const strategyStats = document.getElementById('strategy-stats');
-    let statsHTML = '';
+    let stats = {};
 
+    // Initialize stats for each strategy
     for (const strategy in strategies) {
-        const strategyData = strategies[strategy];
+        stats[strategy] = {
+            wins: 0,
+            losses: 0,
+            winStreak: 0,
+            lossStreak: 0,
+            maxWinStreak: 0,
+            maxLossStreak: 0,
+            currentWinStreak: 0,
+            currentLossStreak: 0
+        };
+    }
+
+    // Calculate stats from gameResults
+    gameResults.forEach(game => {
+        for (const strategy in game.strategiesState) {
+            const strategyData = game.strategiesState[strategy];
+            if (strategyData.won) {
+                stats[strategy].wins++;
+                stats[strategy].currentWinStreak++;
+                stats[strategy].currentLossStreak = 0;
+                if (stats[strategy].currentWinStreak > stats[strategy].maxWinStreak) {
+                    stats[strategy].maxWinStreak = stats[strategy].currentWinStreak;
+                }
+            } else {
+                stats[strategy].losses++;
+                stats[strategy].currentLossStreak++;
+                stats[strategy].currentWinStreak = 0;
+                if (stats[strategy].currentLossStreak > stats[strategy].maxLossStreak) {
+                    stats[strategy].maxLossStreak = stats[strategy].currentLossStreak;
+                }
+            }
+        }
+    });
+
+    // Generate the HTML for the stats
+    let statsHTML = '';
+    for (const strategy in stats) {
         statsHTML += `
             <div>
                 <h3>${strategy}</h3>
-                <p>Wins: ${strategyData.wins}</p>
-                <p>Losses: ${strategyData.losses}</p>
-                <p>Win Streak: ${strategyData.maxWinStreak}</p>
-                <p>Loss Streak: ${strategyData.maxLossStreak}</p>
+                <p>Wins: ${stats[strategy].wins}</p>
+                <p>Losses: ${stats[strategy].losses}</p>
+                <p>Win Streak: ${stats[strategy].maxWinStreak}</p>
+                <p>Loss Streak: ${stats[strategy].maxLossStreak}</p>
             </div>
         `;
     }
