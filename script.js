@@ -10,7 +10,8 @@ const strategies = {
     'The Marcos': { sequence: ['P', 'B', 'P', 'P', 'B', 'B'], position: 0 }
 };
 
-let gameResults = [];
+// Load gameResults from session storage or initialize an empty array
+let gameResults = JSON.parse(sessionStorage.getItem('gameResults')) || [];
 
 function recordResult(result) {
     history.push(result);
@@ -66,6 +67,7 @@ function saveGameResult(result) {
         };
     }
     gameResults.push({ result, strategiesState });
+    sessionStorage.setItem('gameResults', JSON.stringify(gameResults)); // Save to session storage
 }
 
 function updatePredictions() {
