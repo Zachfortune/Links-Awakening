@@ -74,14 +74,7 @@ class Strategy {
     }
 
     fullReset() {
-        // Reset all aspects of the strategy
-        this.position = 0;
-        this.wins = 0;
-        this.losses = 0;
-        this.currentWinStreak = 0;
-        this.currentLossStreak = 0;
-        this.maxWinStreak = 0;
-        this.maxLossStreak = 0;
+        this.resetStats(); // Reset all stats and sequence position
     }
 
     getStats() {
@@ -150,12 +143,6 @@ function deleteLastHand() {
     }
 }
 
-function resetAllStrategies() {
-    for (const strategy in strategies) {
-        strategies[strategy].resetStats(); // Reset position and stats to ensure they start fresh
-    }
-}
-
 function fullResetAllStrategies() {
     for (const strategy in strategies) {
         strategies[strategy].fullReset(); // Completely reset all strategies to their initial state
@@ -211,7 +198,7 @@ function updatePredictions() {
 function updateChart() {
     const ctx = document.getElementById('myChart').getContext('2d');
     
-    // Destroy existing chart instance if it exists
+    // Destroy existing chart instancee if it exists
     if (myChart) {
         myChart.destroy();
     }
@@ -260,7 +247,7 @@ function updateStrategyStats() {
     strategyStats.innerHTML = statsHTML;
 }
 
-// Dark Mode Togglee
+// Dark Mode Toggle
 document.getElementById('toggle-dark-mode').addEventListener('click', function() {
     document.body.classList.toggle('dark-mode');
 });
