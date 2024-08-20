@@ -62,6 +62,10 @@ button[tie] {
     background-color: #28A745; /* Green for Tie */
 }
 
+button[delete] {
+    background-color: #FF00FF; /* Magenta for Delete Last Hand */
+}
+
 .dark-mode {
     background-color: #333;
     color: #f4f4f4;
