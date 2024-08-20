@@ -79,3 +79,29 @@ button[tie] {
 .dark-mode table, .dark-mode th, .dark-mode td {
     border-color: #555;
 }
+
+/* Style for the strategy stats section */
+#strategy-stats {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+#strategy-stats div {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 10px;
+    flex: 1;
+    min-width: 200px;
+}
+
+#strategy-stats h3 {
+    margin-top: 0;
+    font-size: 18px;
+}
+
+#strategy-stats p {
+    margin: 5px 0;
+    font-size: 16px;
+}
