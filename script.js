@@ -14,7 +14,8 @@ function recordResult(result) {
     history.push(result);
     updateCounts(result);
     updateHistoryTable();
-    updatePredictions(result);
+    updateStrategyPositions(result);
+    updatePredictions();
     updateChart();
 }
 
@@ -33,27 +34,29 @@ function updateHistoryTable() {
     });
 }
 
-function updatePredictions(result) {
-    const predictionResults = document.getElementById('prediction-results');
-
-    // Update strategies' positions based on the latest result
+function updateStrategyPositions(result) {
     for (const strategy in strategies) {
         const strategyData = strategies[strategy];
+        
+        // If the result is Tie, move to the next position without resetting
         if (result === 'T') {
-            // If it's a Tie, just increment the position
             strategyData.position = (strategyData.position + 1) % strategyData.sequence.length;
         } else {
-            // If the result matches the predicted outcome, reset the sequence for that strategy
+            // If the result matches the current prediction, reset the position
             if (strategyData.sequence[strategyData.position] === result) {
-                strategyData.position = 0; // Reset position
+                strategyData.position = 0;
             } else {
-                // Otherwise, just move to the next position
+                // Otherwise, move to the next position
                 strategyData.position = (strategyData.position + 1) % strategyData.sequence.length;
             }
         }
     }
+}
 
+function updatePredictions() {
+    const predictionResults = document.getElementById('prediction-results');
     const predictions = predictNextHand();
+    
     predictionResults.innerHTML = `
         <p><strong>The Cake:</strong> ${predictions['The Cake']}</p>
         <p><strong>ZachFortune:</strong> ${predictions['ZachFortune']}</p>
@@ -64,12 +67,10 @@ function updatePredictions(result) {
 
 function predictNextHand() {
     let predictions = {};
-
     for (const strategy in strategies) {
         const { sequence, position } = strategies[strategy];
         predictions[strategy] = sequence[position];
     }
-
     return predictions;
 }
 
