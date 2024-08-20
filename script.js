@@ -4,10 +4,10 @@ let bankerCount = 0;
 let tieCount = 0;
 
 const strategies = {
-    'The Cake': { sequence: ['B', 'B', 'P', 'B', 'B', 'P', 'P', 'B'], position: 0 },
-    'ZachFortune': { sequence: ['B', 'B', 'P', 'P', 'B', 'P', 'B'], position: 0 },
-    'Mr. Toad': { sequence: ['P', 'B', 'P', 'B', 'P', 'B', 'P', 'B'], position: 0 },
-    'The Marcos': { sequence: ['P', 'B', 'P', 'P', 'B', 'B'], position: 0 }
+    'The Cake': { sequence: ['B', 'B', 'P', 'B', 'B', 'P', 'P', 'B'], position: 0, wins: 0, losses: 0, winStreak: 0, lossStreak: 0, maxWinStreak: 0, maxLossStreak: 0 },
+    'ZachFortune': { sequence: ['B', 'B', 'P', 'P', 'B', 'P', 'B'], position: 0, wins: 0, losses: 0, winStreak: 0, lossStreak: 0, maxWinStreak: 0, maxLossStreak: 0 },
+    'Mr. Toad': { sequence: ['P', 'B', 'P', 'B', 'P', 'B', 'P', 'B'], position: 0, wins: 0, losses: 0, winStreak: 0, lossStreak: 0, maxWinStreak: 0, maxLossStreak: 0 },
+    'The Marcos': { sequence: ['P', 'B', 'P', 'P', 'B', 'B'], position: 0, wins: 0, losses: 0, winStreak: 0, lossStreak: 0, maxWinStreak: 0, maxLossStreak: 0 }
 };
 
 // Load gameResults from session storage or initialize an empty array
@@ -42,16 +42,29 @@ function updateHistoryTable() {
 function updateStrategyPositions(result) {
     for (const strategy in strategies) {
         const strategyData = strategies[strategy];
-        
-        // If the result is a Tie, do not advance the position or update streaks
+
+        // Skip tie results for strategy calculations
         if (result === 'T') {
             continue;  // Move to the next strategy
         }
 
         // Check if the current position's prediction matches the result
         if (strategyData.sequence[strategyData.position] === result) {
+            strategyData.wins++;
+            strategyData.winStreak++;
+            strategyData.lossStreak = 0;
+            if (strategyData.winStreak > strategyData.maxWinStreak) {
+                strategyData.maxWinStreak = strategyData.winStreak;
+            }
             strategyData.position = 0;  // Reset if it's a win
         } else {
+            // Otherwise, it's a loss
+            strategyData.losses++;
+            strategyData.lossStreak++;
+            strategyData.winStreak = 0;
+            if (strategyData.lossStreak > strategyData.maxLossStreak) {
+                strategyData.maxLossStreak = strategyData.lossStreak;
+            }
             strategyData.position = (strategyData.position + 1) % strategyData.sequence.length;
         }
     }
@@ -73,7 +86,7 @@ function saveGameResult(result) {
 function updatePredictions() {
     const predictionResults = document.getElementById('prediction-results');
     const predictions = predictNextHand();
-    
+
     predictionResults.innerHTML = `
         <p><strong>The Cake:</strong> ${predictions['The Cake']}</p>
         <p><strong>ZachFortune:</strong> ${predictions['ZachFortune']}</p>
@@ -115,27 +128,20 @@ function updateChart() {
 
 function updateStrategyStats() {
     const strategyStats = document.getElementById('strategy-stats');
-    let stats = {};
+    let statsHTML = '';
 
-    // Initialize stats for each strategy
-    for (const strategy in strategies) {
-        stats[strategy] = {
-            wins: 0,
-            losses: 0,
-            winStreak: 0,
-            lossStreak: 0,
-            maxWinStreak: 0,
-            maxLossStreak: 0,
-            currentWinStreak: 0,
-            currentLossStreak: 0
-        };
-    }
+    // Ensure stats are calculated fresh each time
+    const stats = {
+        'The Cake': { wins: 0, losses: 0, maxWinStreak: 0, maxLossStreak: 0, currentWinStreak: 0, currentLossStreak: 0 },
+        'ZachFortune': { wins: 0, losses: 0, maxWinStreak: 0, maxLossStreak: 0, currentWinStreak: 0, currentLossStreak: 0 },
+        'Mr. Toad': { wins: 0, losses: 0, maxWinStreak: 0, maxLossStreak: 0, currentWinStreak: 0, currentLossStreak: 0 },
+        'The Marcos': { wins: 0, losses: 0, maxWinStreak: 0, maxLossStreak: 0, currentWinStreak: 0, currentLossStreak: 0 }
+    };
 
-    // Calculate stats from gameResults
     gameResults.forEach(game => {
         for (const strategy in game.strategiesState) {
-            const strategyData = game.strategiesState[strategy];
-            if (strategyData.won) {
+            const state = game.strategiesState[strategy];
+            if (state.won) {
                 stats[strategy].wins++;
                 stats[strategy].currentWinStreak++;
                 stats[strategy].currentLossStreak = 0;
@@ -154,15 +160,14 @@ function updateStrategyStats() {
     });
 
     // Generate the HTML for the stats
-    let statsHTML = '';
     for (const strategy in stats) {
         statsHTML += `
             <div>
                 <h3>${strategy}</h3>
                 <p>Wins: ${stats[strategy].wins}</p>
                 <p>Losses: ${stats[strategy].losses}</p>
-                <p>Win Streak: ${stats[strategy].maxWinStreak}</p>
-                <p>Loss Streak: ${stats[strategy].maxLossStreak}</p>
+                <p>Max Win Streak: ${stats[strategy].maxWinStreak}</p>
+                <p>Max Loss Streak: ${stats[strategy].maxLossStreak}</p>
             </div>
         `;
     }
