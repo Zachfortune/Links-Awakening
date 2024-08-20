@@ -35,6 +35,9 @@ class Strategy {
             }
             this.position = (this.position + 1) % this.sequence.length;
         }
+
+        // Debugging logs
+        console.log(`${this.name} updated - Position: ${this.position}, Wins: ${this.wins}, Losses: ${this.losses}, Win Streak: ${this.currentWinStreak}, Loss Streak: ${this.currentLossStreak}`);
     }
 
     getStats() {
@@ -60,6 +63,7 @@ let bankerCount = 0;
 let tieCount = 0;
 
 function recordResult(result) {
+    console.log(`Recording result: ${result}`);
     history.push(result);
     updateCounts(result);
     updateHistoryTable();
@@ -73,6 +77,7 @@ function updateCounts(result) {
     if (result === 'P') playerCount++;
     if (result === 'B') bankerCount++;
     if (result === 'T') tieCount++;
+    console.log(`Counts updated - Player: ${playerCount}, Banker: ${bankerCount}, Tie: ${tieCount}`);
 }
 
 function updateHistoryTable() {
