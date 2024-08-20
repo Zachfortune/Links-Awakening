@@ -64,7 +64,7 @@ class Strategy {
     }
 
     resetStats() {
-        this.position = 0;
+        this.position = 0; // Ensure position is reset to the start of the sequence
         this.wins = 0;
         this.losses = 0;
         this.currentWinStreak = 0;
@@ -141,7 +141,7 @@ function deleteLastHand() {
 
 function resetAllStrategies() {
     for (const strategy in strategies) {
-        strategies[strategy].resetStats();
+        strategies[strategy].resetStats(); // Reset position and stats to ensure they start fresh
     }
 }
 
