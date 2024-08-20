@@ -1,9 +1,3 @@
-let history = [];
-let playerCount = 0;
-let bankerCount = 0;
-let tieCount = 0;
-let myChart = null; // Variable to hold the chart instance
-
 class Strategy {
     constructor(name, sequence) {
         this.name = name;
@@ -51,7 +45,9 @@ class Strategy {
             wins: this.wins,
             losses: this.losses,
             maxWinStreak: this.maxWinStreak,
-            maxLossStreak: this.maxLossStreak
+            maxLossStreak: this.maxLossStreak,
+            currentWinStreak: this.currentWinStreak,
+            currentLossStreak: this.currentLossStreak
         };
     }
 }
@@ -62,6 +58,12 @@ const strategies = {
     'Mr. Toad': new Strategy('Mr. Toad', ['P', 'B', 'P', 'B', 'P', 'B', 'P', 'B']),
     'The Marcos': new Strategy('The Marcos', ['P', 'B', 'P', 'P', 'B', 'B'])
 };
+
+let history = [];
+let playerCount = 0;
+let bankerCount = 0;
+let tieCount = 0;
+let myChart = null; // Variable to hold the chart instance
 
 function recordResult(result) {
     console.log(`Recording result: ${result}`);
@@ -148,6 +150,8 @@ function updateStrategyStats() {
                 <p>Losses: ${stats.losses}</p>
                 <p>Max Win Streak: ${stats.maxWinStreak}</p>
                 <p>Max Loss Streak: ${stats.maxLossStreak}</p>
+                <p>Current Win Streak: ${stats.currentWinStreak}</p>
+                <p>Current Loss Streak: ${stats.currentLossStreak}</p>
             </div>
         `;
     }
