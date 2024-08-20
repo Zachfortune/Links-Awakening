@@ -51,7 +51,7 @@ button:hover {
 
 /* Specific button colors */
 button[player] {
-    background-color: #007BFF; /* Bluee for Player */
+    background-color: #007BFF; /* Blue for Player */
 }
 
 button[banker] {
@@ -89,19 +89,27 @@ button[tie] {
 }
 
 #strategy-stats div {
-    background-color: #f9f9f9;
+    background-color: #444; /* Dark gray background */
     border: 1px solid #ddd;
     padding: 10px;
     flex: 1;
     min-width: 200px;
+    color: white; /* Ensures text is readable */
 }
 
 #strategy-stats h3 {
     margin-top: 0;
     font-size: 18px;
+    color: #ffa500; /* Orange for the headings */
 }
 
 #strategy-stats p {
     margin: 5px 0;
     font-size: 16px;
+    color: #ddd; /* Light gray text */
+}
+
+.dark-mode #strategy-stats div {
+    background-color: #222; /* Even darker gray in dark mode */
+    border: 1px solid #555;
 }
