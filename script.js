@@ -18,7 +18,7 @@ function recordResult(result) {
     updateCounts(result);
     updateStrategyPerformance(winningStrategy, predictions, result);
     updateHistoryTable();
-    updatePredictions();
+    updatePredictions(predictions);
     updateChart();
     updatePerformanceTable();
 }
@@ -37,7 +37,7 @@ function resetGame() {
     };
 
     updateHistoryTable();
-    updatePredictions();
+    updatePredictions(predictNextHand());
     updateChart();
     updatePerformanceTable();
 }
@@ -57,9 +57,8 @@ function updateHistoryTable() {
     });
 }
 
-function updatePredictions() {
+function updatePredictions(predictions) {
     const predictionResults = document.getElementById('prediction-results');
-    const predictions = predictNextHand();
     predictionResults.innerHTML = `
         <p><strong>The Cake:</strong> ${predictions['The Cake']}</p>
         <p><strong>ZachFortune:</strong> ${predictions['ZachFortune']}</p>
@@ -102,7 +101,7 @@ function determineWinningStrategy(result, predictions) {
 
 function updateStrategyPerformance(winningStrategy, predictions, result) {
     for (const strategy in predictions) {
-        if (strategy === winningStrategy) {
+        if (predictions[strategy] === result) {
             strategyPerformance[strategy].wins++;
         } else {
             strategyPerformance[strategy].losses++;
@@ -146,5 +145,5 @@ function updateChart() {
     });
 }
 
-// Initialize the game with empty tables
+// Initialize the game with empty tables and predictions
 resetGame();
