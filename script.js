@@ -40,14 +40,18 @@ class Strategy {
     reverseUpdate(result) {
         if (result === 'T') return; // Ignore ties for strategy update
 
+        if (this.position === 0) {
+            this.position = this.sequence.length - 1;
+        } else {
+            this.position = (this.position - 1 + this.sequence.length) % this.sequence.length;
+        }
+
         if (this.predict() === result) {
             this.wins--;
             this.currentWinStreak = Math.max(0, this.currentWinStreak - 1);
-            this.position = this.sequence.length - 1; // Move to the end of the sequence
         } else {
             this.losses--;
             this.currentLossStreak = Math.max(0, this.currentLossStreak - 1);
-            this.position = (this.position - 1 + this.sequence.length) % this.sequence.length;
         }
 
         // Recalculate max streaks
