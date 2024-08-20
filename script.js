@@ -1,3 +1,9 @@
+let history = [];
+let playerCount = 0;
+let bankerCount = 0;
+let tieCount = 0;
+let myChart = null; // Variable to hold the chart instance
+
 class Strategy {
     constructor(name, sequence) {
         this.name = name;
@@ -57,11 +63,6 @@ const strategies = {
     'The Marcos': new Strategy('The Marcos', ['P', 'B', 'P', 'P', 'B', 'B'])
 };
 
-let history = [];
-let playerCount = 0;
-let bankerCount = 0;
-let tieCount = 0;
-
 function recordResult(result) {
     console.log(`Recording result: ${result}`);
     history.push(result);
@@ -108,7 +109,13 @@ function updatePredictions() {
 
 function updateChart() {
     const ctx = document.getElementById('myChart').getContext('2d');
-    new Chart(ctx, {
+    
+    // Destroy existing chart instance if it exists
+    if (myChart) {
+        myChart.destroy();
+    }
+
+    myChart = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: ['Player', 'Banker', 'Tie'],
