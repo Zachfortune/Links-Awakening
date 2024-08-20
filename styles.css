@@ -106,7 +106,7 @@ button[tie] {
 #strategy-stats p {
     margin: 5px 0;
     font-size: 16px;
-    color: #ddd; /* Light gray textt */
+    color: #ddd; /* Light gray text */
 }
 
 .dark-mode #strategy-stats div {
