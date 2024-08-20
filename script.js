@@ -25,7 +25,7 @@ class Strategy {
             if (this.currentWinStreak > this.maxWinStreak) {
                 this.maxWinStreak = this.currentWinStreak;
             }
-            this.position = 0; // Reset if correct prediction
+            this.position = 0; // Reset to beginning of sequence after a win
         } else {
             this.losses++;
             this.currentLossStreak++;
@@ -36,7 +36,6 @@ class Strategy {
             this.position = (this.position + 1) % this.sequence.length;
         }
 
-        // Debugging logs
         console.log(`${this.name} updated - Position: ${this.position}, Wins: ${this.wins}, Losses: ${this.losses}, Win Streak: ${this.currentWinStreak}, Loss Streak: ${this.currentLossStreak}`);
     }
 
@@ -56,7 +55,8 @@ const strategies = {
     'The Cake': new Strategy('The Cake', ['B', 'B', 'P', 'B', 'B', 'P', 'P', 'B']),
     'ZachFortune': new Strategy('ZachFortune', ['B', 'B', 'P', 'P', 'B', 'P', 'B']),
     'Mr. Toad': new Strategy('Mr. Toad', ['P', 'B', 'P', 'B', 'P', 'B', 'P', 'B']),
-    'The Marcos': new Strategy('The Marcos', ['P', 'B', 'P', 'P', 'B', 'B'])
+    'The Marcos': new Strategy('The Marcos', ['P', 'B', 'P', 'P', 'B', 'B']),
+    'Double Trouble': new Strategy('Double Trouble', ['B', 'B', 'P', 'P', 'B', 'B']) // New strategy added
 };
 
 let history = [];
