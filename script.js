@@ -14,25 +14,8 @@ function recordResult(result) {
     history.push(result);
     updateCounts(result);
     updateHistoryTable();
-    checkAndResetStrategies(result);
-    updatePredictions();
+    updatePredictions(result);
     updateChart();
-}
-
-function checkAndResetStrategies(result) {
-    if (result === 'P' || result === 'B') {
-        // Reset the position for all strategies if there's a win
-        for (const strategy in strategies) {
-            if (strategies[strategy].sequence[strategies[strategy].position] === result) {
-                strategies[strategy].position = 0; // Reset the sequence to start
-            }
-        }
-    } else if (result === 'T') {
-        // If it's a Tie, just increment the position without resetting
-        for (const strategy in strategies) {
-            strategies[strategy].position = (strategies[strategy].position + 1) % strategies[strategy].sequence.length;
-        }
-    }
 }
 
 function updateCounts(result) {
@@ -50,8 +33,26 @@ function updateHistoryTable() {
     });
 }
 
-function updatePredictions() {
+function updatePredictions(result) {
     const predictionResults = document.getElementById('prediction-results');
+
+    // Update strategies' positions based on the latest result
+    for (const strategy in strategies) {
+        const strategyData = strategies[strategy];
+        if (result === 'T') {
+            // If it's a Tie, just increment the position
+            strategyData.position = (strategyData.position + 1) % strategyData.sequence.length;
+        } else {
+            // If the result matches the predicted outcome, reset the sequence for that strategy
+            if (strategyData.sequence[strategyData.position] === result) {
+                strategyData.position = 0; // Reset position
+            } else {
+                // Otherwise, just move to the next position
+                strategyData.position = (strategyData.position + 1) % strategyData.sequence.length;
+            }
+        }
+    }
+
     const predictions = predictNextHand();
     predictionResults.innerHTML = `
         <p><strong>The Cake:</strong> ${predictions['The Cake']}</p>
