@@ -40,13 +40,19 @@ class Strategy {
     }
 
     getStats() {
+        const totalGames = this.wins + this.losses;
+        const winRate = totalGames > 0 ? (this.wins / totalGames * 100).toFixed(2) : 0;
+        const lossRate = totalGames > 0 ? (this.losses / totalGames * 100).toFixed(2) : 0;
+
         return {
             wins: this.wins,
             losses: this.losses,
             maxWinStreak: this.maxWinStreak,
             maxLossStreak: this.maxLossStreak,
             currentWinStreak: this.currentWinStreak,
-            currentLossStreak: this.currentLossStreak
+            currentLossStreak: this.currentLossStreak,
+            winRate: winRate,
+            lossRate: lossRate
         };
     }
 }
@@ -57,8 +63,8 @@ const strategies = {
     'Mr. Toad': new Strategy('Mr. Toad', ['P', 'B', 'P', 'B', 'P', 'B', 'P', 'B']),
     'The Marcos': new Strategy('The Marcos', ['P', 'B', 'P', 'P', 'B', 'B']),
     'Double Trouble': new Strategy('Double Trouble', ['B', 'B', 'P', 'P', 'B', 'B']),
-    'The Gentleman': new Strategy('The Gentleman', ['B', 'P', 'B', 'P', 'P', 'B', 'B', 'P']), // New strategy added
-    'Mr. Miyagi': new Strategy('Mr. Miyagi', ['P', 'P', 'P', 'B', 'B', 'P', 'P', 'P']) // New strategy added
+    'The Gentleman': new Strategy('The Gentleman', ['B', 'P', 'B', 'P', 'P', 'B', 'B', 'P']),
+    'Mr. Miyagi': new Strategy('Mr. Miyagi', ['P', 'P', 'P', 'B', 'B', 'P', 'P', 'P'])
 };
 
 let history = [];
@@ -114,7 +120,7 @@ function updatePredictions() {
 function updateChart() {
     const ctx = document.getElementById('myChart').getContext('2d');
     
-    // Destroy existing chart instance if it eexists
+    // Destroy existing chart instance if it exists
     if (myChart) {
         myChart.destroy();
     }
@@ -150,6 +156,8 @@ function updateStrategyStats() {
                 <h3>${strategies[strategy].name}</h3>
                 <p>Wins: ${stats.wins}</p>
                 <p>Losses: ${stats.losses}</p>
+                <p>Win Rate: ${stats.winRate}%</p>
+                <p>Loss Rate: ${stats.lossRate}%</p>
                 <p>Max Win Streak: ${stats.maxWinStreak}</p>
                 <p>Max Loss Streak: ${stats.maxLossStreak}</p>
                 <p>Current Win Streak: ${stats.currentWinStreak}</p>
