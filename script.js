@@ -73,6 +73,17 @@ class Strategy {
         this.maxLossStreak = 0;
     }
 
+    fullReset() {
+        // Reset all aspects of the strategy
+        this.position = 0;
+        this.wins = 0;
+        this.losses = 0;
+        this.currentWinStreak = 0;
+        this.currentLossStreak = 0;
+        this.maxWinStreak = 0;
+        this.maxLossStreak = 0;
+    }
+
     getStats() {
         const totalGames = this.wins + this.losses;
         const winRate = totalGames > 0 ? (this.wins / totalGames * 100).toFixed(2) : 0;
@@ -130,7 +141,7 @@ function deleteLastHand() {
     updateStrategyStats();
 
     if (history.length === 0) {
-        resetAllStrategies();
+        fullResetAllStrategies();
         playerCount = 0;
         bankerCount = 0;
         tieCount = 0;
@@ -142,6 +153,12 @@ function deleteLastHand() {
 function resetAllStrategies() {
     for (const strategy in strategies) {
         strategies[strategy].resetStats(); // Reset position and stats to ensure they start fresh
+    }
+}
+
+function fullResetAllStrategies() {
+    for (const strategy in strategies) {
+        strategies[strategy].fullReset(); // Completely reset all strategies to their initial state
     }
 }
 
@@ -243,7 +260,7 @@ function updateStrategyStats() {
     strategyStats.innerHTML = statsHTML;
 }
 
-// Dark Mode Toggle
+// Dark Mode Togglee
 document.getElementById('toggle-dark-mode').addEventListener('click', function() {
     document.body.classList.toggle('dark-mode');
 });
