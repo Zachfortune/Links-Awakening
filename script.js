@@ -12,14 +12,11 @@ class Strategy {
     }
 
     predict() {
-        console.log(`Predicting for ${this.name}: Position ${this.position}, Prediction ${this.sequence[this.position]}`);
         return this.sequence[this.position];
     }
 
     update(result) {
-        if (result === 'T') return; // Ignore ties for strategy update
-
-        console.log(`Updating ${this.name}: Current position ${this.position}, Current result ${result}`);
+        if (result === 'T') return;
 
         if (this.predict() === result) {
             this.wins++;
@@ -28,7 +25,7 @@ class Strategy {
             if (this.currentWinStreak > this.maxWinStreak) {
                 this.maxWinStreak = this.currentWinStreak;
             }
-            this.position = 0; // Reset to beginning of sequence after a win
+            this.position = 0;
         } else {
             this.losses++;
             this.currentLossStreak++;
@@ -38,14 +35,10 @@ class Strategy {
             }
             this.position = (this.position + 1) % this.sequence.length;
         }
-
-        console.log(`${this.name} after update: Position ${this.position}, Wins ${this.wins}, Losses ${this.losses}`);
     }
 
     reverseUpdate(result) {
-        if (result === 'T') return; // Ignore ties for strategy update
-
-        console.log(`Reversing ${this.name}: Current position ${this.position}, Reversing result ${result}`);
+        if (result === 'T') return;
 
         if (this.position === 0) {
             this.position = this.sequence.length - 1;
@@ -60,23 +53,20 @@ class Strategy {
             this.losses--;
             this.currentLossStreak = Math.max(0, this.currentLossStreak - 1);
         }
-
-        console.log(`${this.name} after reverse update: Position ${this.position}, Wins ${this.wins}, Losses ${this.losses}`);
     }
 
     resetStats() {
-        this.position = 0; // Reset position to the start of the sequence
+        this.position = 0;
         this.wins = 0;
         this.losses = 0;
         this.currentWinStreak = 0;
         this.currentLossStreak = 0;
         this.maxWinStreak = 0;
         this.maxLossStreak = 0;
-        console.log(`${this.name} has been reset. Position is now ${this.position}`);
     }
 
     fullReset() {
-        this.resetStats(); // Fully reset all stats and sequence position
+        this.resetStats();
     }
 
     getStats() {
@@ -111,10 +101,9 @@ let history = [];
 let playerCount = 0;
 let bankerCount = 0;
 let tieCount = 0;
-let myChart = null; // Variable to hold the chart instance
+let myChart = null;
 
 function recordResult(result) {
-    console.log(`Recording result: ${result}`);
     history.push(result);
     updateCounts(result);
     updateHistoryTable();
@@ -136,21 +125,19 @@ function deleteLastHand() {
     updateStrategyStats();
 
     if (history.length === 0) {
-        console.log("All hands deleted, resetting strategies.");
         fullResetAllStrategies();
         playerCount = 0;
         bankerCount = 0;
         tieCount = 0;
         updateChart();
         updateStrategyStats();
-        updatePredictions(); // Ensure predictions reflect the reset state
+        updatePredictions();
     }
 }
 
 function fullResetAllStrategies() {
-    console.log("Full reset of all strategies.");
     for (const strategy in strategies) {
-        strategies[strategy].fullReset(); // Completely reset all strategies to their initial state
+        strategies[strategy].fullReset();
     }
 }
 
@@ -158,14 +145,12 @@ function updateCounts(result) {
     if (result === 'P') playerCount++;
     if (result === 'B') bankerCount++;
     if (result === 'T') tieCount++;
-    console.log(`Counts updated - Player: ${playerCount}, Banker: ${bankerCount}, Tie: ${tieCount}`);
 }
 
 function reverseUpdateCounts(result) {
     if (result === 'P') playerCount--;
     if (result === 'B') bankerCount--;
     if (result === 'T') tieCount--;
-    console.log(`Counts reversed - Player: ${playerCount}, Banker: ${bankerCount}, Tie: ${tieCount}`);
 }
 
 function updateHistoryTable() {
@@ -202,8 +187,7 @@ function updatePredictions() {
 
 function updateChart() {
     const ctx = document.getElementById('myChart').getContext('2d');
-    
-    // Destroy existing chart instance if it exists
+
     if (myChart) {
         myChart.destroy();
     }
@@ -252,7 +236,7 @@ function updateStrategyStats() {
     strategyStats.innerHTML = statsHTML;
 }
 
-// Dark Mode Togglle
+// Dark Modde Toggle
 document.getElementById('toggle-dark-mode').addEventListener('click', function() {
     document.body.classList.toggle('dark-mode');
 });
