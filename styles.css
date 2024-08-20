@@ -8,7 +8,7 @@ body {
 }
 
 header {
-    background-color: #6200ee;
+    background-color: #FFA500; /* Changed from purple to orange */
     color: #fff;
     padding: 10px;
     text-align: center;
@@ -35,15 +35,31 @@ th, td {
 
 button {
     padding: 10px 20px;
-    background-color: #6200ee;
     color: white;
     border: none;
     cursor: pointer;
     margin: 5px;
 }
 
+button#toggle-dark-mode {
+    background-color: #FFA500; /* Orange for the dark mode toggle */
+}
+
 button:hover {
-    background-color: #3700b3;
+    opacity: 0.8;
+}
+
+/* Specific button colors */
+button[player] {
+    background-color: #007BFF; /* Blue for Player */
+}
+
+button[banker] {
+    background-color: #DC3545; /* Red for Banker */
+}
+
+button[tie] {
+    background-color: #28A745; /* Green for Tie */
 }
 
 .dark-mode {
@@ -52,7 +68,7 @@ button:hover {
 }
 
 .dark-mode header {
-    background-color: #3700b3;
+    background-color: #FF8C00; /* Darker Orange for header in dark mode */
 }
 
 .dark-mode button {
