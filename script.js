@@ -35,8 +35,20 @@ class Strategy {
             }
             this.position = (this.position + 1) % this.sequence.length;
         }
+    }
 
-        console.log(`${this.name} updated - Position: ${this.position}, Wins: ${this.wins}, Losses: ${this.losses}, Win Streak: ${this.currentWinStreak}, Loss Streak: ${this.currentLossStreak}`);
+    reverseUpdate(result) {
+        if (result === 'T') return; // Ignore ties for strategy update
+
+        if (this.predict() === result) {
+            this.wins--;
+            this.currentWinStreak = Math.max(0, this.currentWinStreak - 1);
+            this.position = this.sequence.length - 1; // Move to the end of the sequence
+        } else {
+            this.losses--;
+            this.currentLossStreak = Math.max(0, this.currentLossStreak - 1);
+            this.position = (this.position - 1 + this.sequence.length) % this.sequence.length;
+        }
     }
 
     getStats() {
@@ -84,11 +96,30 @@ function recordResult(result) {
     updateStrategyStats();
 }
 
+function deleteLastHand() {
+    if (history.length === 0) return;
+
+    const lastResult = history.pop();
+    reverseUpdateCounts(lastResult);
+    reverseUpdateStrategies(lastResult);
+    updateHistoryTable();
+    updatePredictions();
+    updateChart();
+    updateStrategyStats();
+}
+
 function updateCounts(result) {
     if (result === 'P') playerCount++;
     if (result === 'B') bankerCount++;
     if (result === 'T') tieCount++;
     console.log(`Counts updated - Player: ${playerCount}, Banker: ${bankerCount}, Tie: ${tieCount}`);
+}
+
+function reverseUpdateCounts(result) {
+    if (result === 'P') playerCount--;
+    if (result === 'B') bankerCount--;
+    if (result === 'T') tieCount--;
+    console.log(`Counts reversed - Player: ${playerCount}, Banker: ${bankerCount}, Tie: ${tieCount}`);
 }
 
 function updateHistoryTable() {
@@ -103,6 +134,12 @@ function updateHistoryTable() {
 function updateStrategies(result) {
     for (const strategy in strategies) {
         strategies[strategy].update(result);
+    }
+}
+
+function reverseUpdateStrategies(result) {
+    for (const strategy in strategies) {
+        strategies[strategy].reverseUpdate(result);
     }
 }
 
