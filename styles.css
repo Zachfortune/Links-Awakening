@@ -79,15 +79,3 @@ button[tie] {
 .dark-mode table, .dark-mode th, .dark-mode td {
     border-color: #555;
 }
-
-/* Baccarat chart styles */
-#baccarat-chart {
-    margin-top: 20px;
-}
-
-#baccarat-chart canvas {
-    display: block;
-    margin: 10px auto;
-    background-color: #fff;
-    border: 1px solid #ccc;
-}
