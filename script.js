@@ -3,12 +3,36 @@ let playerCount = 0;
 let bankerCount = 0;
 let tieCount = 0;
 
+const strategies = {
+    'The Cake': { sequence: ['B', 'B', 'P', 'B', 'B', 'P', 'P', 'B'], position: 0 },
+    'ZachFortune': { sequence: ['B', 'B', 'P', 'P', 'B', 'P', 'B'], position: 0 },
+    'Mr. Toad': { sequence: ['P', 'B', 'P', 'B', 'P', 'B', 'P', 'B'], position: 0 },
+    'The Marcos': { sequence: ['P', 'B', 'P', 'P', 'B', 'B'], position: 0 }
+};
+
 function recordResult(result) {
     history.push(result);
     updateCounts(result);
     updateHistoryTable();
+    checkAndResetStrategies(result);
     updatePredictions();
     updateChart();
+}
+
+function checkAndResetStrategies(result) {
+    if (result === 'P' || result === 'B') {
+        // Reset the position for all strategies if there's a win
+        for (const strategy in strategies) {
+            if (strategies[strategy].sequence[strategies[strategy].position] === result) {
+                strategies[strategy].position = 0; // Reset the sequence to start
+            }
+        }
+    } else if (result === 'T') {
+        // If it's a Tie, just increment the position without resetting
+        for (const strategy in strategies) {
+            strategies[strategy].position = (strategies[strategy].position + 1) % strategies[strategy].sequence.length;
+        }
+    }
 }
 
 function updateCounts(result) {
@@ -38,19 +62,11 @@ function updatePredictions() {
 }
 
 function predictNextHand() {
-    const strategies = {
-        'The Cake': ['B', 'B', 'P', 'B', 'B', 'P', 'P', 'B'],
-        'ZachFortune': ['B', 'B', 'P', 'P', 'B', 'P', 'B'],
-        'Mr. Toad': ['P', 'B', 'P', 'B', 'P', 'B', 'P', 'B'],
-        'The Marcos': ['P', 'B', 'P', 'P', 'B', 'B']
-    };
-
     let predictions = {};
 
     for (const strategy in strategies) {
-        let sequence = strategies[strategy];
-        let sequenceIndex = history.length % sequence.length;
-        predictions[strategy] = sequence[sequenceIndex];
+        const { sequence, position } = strategies[strategy];
+        predictions[strategy] = sequence[position];
     }
 
     return predictions;
