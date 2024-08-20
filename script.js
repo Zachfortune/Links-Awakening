@@ -3,12 +3,11 @@ let playerCount = 0;
 let bankerCount = 0;
 let tieCount = 0;
 
-// Define each strategy with its sequence, current position, and stats
 const strategies = {
-    'The Cake': { sequence: ['B', 'B', 'P', 'B', 'B', 'P', 'P', 'B'], position: 0, wins: 0, losses: 0, winStreak: 0, lossStreak: 0, maxWinStreak: 0, maxLossStreak: 0 },
-    'ZachFortune': { sequence: ['B', 'B', 'P', 'P', 'B', 'P', 'B'], position: 0, wins: 0, losses: 0, winStreak: 0, lossStreak: 0, maxWinStreak: 0, maxLossStreak: 0 },
-    'Mr. Toad': { sequence: ['P', 'B', 'P', 'B', 'P', 'B', 'P', 'B'], position: 0, wins: 0, losses: 0, winStreak: 0, lossStreak: 0, maxWinStreak: 0, maxLossStreak: 0 },
-    'The Marcos': { sequence: ['P', 'B', 'P', 'P', 'B', 'B'], position: 0, wins: 0, losses: 0, winStreak: 0, lossStreak: 0, maxWinStreak: 0, maxLossStreak: 0 }
+    'The Cake': { sequence: ['B', 'B', 'P', 'B', 'B', 'P', 'P', 'B'], position: 0 },
+    'ZachFortune': { sequence: ['B', 'B', 'P', 'P', 'B', 'P', 'B'], position: 0 },
+    'Mr. Toad': { sequence: ['P', 'B', 'P', 'B', 'P', 'B', 'P', 'B'], position: 0 },
+    'The Marcos': { sequence: ['P', 'B', 'P', 'P', 'B', 'B'], position: 0 }
 };
 
 function recordResult(result) {
@@ -18,7 +17,7 @@ function recordResult(result) {
     updateStrategyPositions(result);
     updatePredictions();
     updateChart();
-    updateStrategyStats();  // Update stats immediately after recording the result
+    updateStrategyStats();  // Recalculate and update stats after recording the result
 }
 
 function updateCounts(result) {
@@ -45,23 +44,11 @@ function updateStrategyPositions(result) {
             continue;  // Move to the next strategy
         }
 
-        // If the strategy's prediction matches the result, it's a win
+        // Check if the current position's prediction matches the result
         if (strategyData.sequence[strategyData.position] === result) {
-            strategyData.wins++;
-            strategyData.winStreak++;
-            strategyData.lossStreak = 0;
-            if (strategyData.winStreak > strategyData.maxWinStreak) {
-                strategyData.maxWinStreak = strategyData.winStreak;
-            }
             strategyData.position = 0;  // Reset if it's a win
         } else {
-            // Otherwise, it's a loss
-            strategyData.losses++;
-            strategyData.lossStreak++;
-            strategyData.winStreak = 0;
-            if (strategyData.lossStreak > strategyData.maxLossStreak) {
-                strategyData.maxLossStreak = strategyData.lossStreak;
-            }
+            // Otherwise, move to the next position
             strategyData.position = (strategyData.position + 1) % strategyData.sequence.length;
         }
     }
@@ -114,15 +101,49 @@ function updateStrategyStats() {
     const strategyStats = document.getElementById('strategy-stats');
     let statsHTML = '';
 
-    for (const strategy in strategies) {
-        const strategyData = strategies[strategy];
+    // Reset statistics for each strategy
+    const stats = {
+        'The Cake': { wins: 0, losses: 0, maxWinStreak: 0, maxLossStreak: 0, currentWinStreak: 0, currentLossStreak: 0 },
+        'ZachFortune': { wins: 0, losses: 0, maxWinStreak: 0, maxLossStreak: 0, currentWinStreak: 0, currentLossStreak: 0 },
+        'Mr. Toad': { wins: 0, losses: 0, maxWinStreak: 0, maxLossStreak: 0, currentWinStreak: 0, currentLossStreak: 0 },
+        'The Marcos': { wins: 0, losses: 0, maxWinStreak: 0, maxLossStreak: 0, currentWinStreak: 0, currentLossStreak: 0 }
+    };
+
+    history.forEach(result => {
+        for (const strategy in strategies) {
+            const strategyData = strategies[strategy];
+            const currentPrediction = strategyData.sequence[strategyData.position];
+
+            if (result === currentPrediction) {
+                stats[strategy].wins++;
+                stats[strategy].currentWinStreak++;
+                stats[strategy].currentLossStreak = 0;
+                if (stats[strategy].currentWinStreak > stats[strategy].maxWinStreak) {
+                    stats[strategy].maxWinStreak = stats[strategy].currentWinStreak;
+                }
+            } else if (result !== 'T') {  // Only count losses if not a Tie
+                stats[strategy].losses++;
+                stats[strategy].currentLossStreak++;
+                stats[strategy].currentWinStreak = 0;
+                if (stats[strategy].currentLossStreak > stats[strategy].maxLossStreak) {
+                    stats[strategy].maxLossStreak = stats[strategy].currentLossStreak;
+                }
+            }
+
+            // Update the position for the next prediction
+            strategyData.position = (strategyData.position + 1) % strategyData.sequence.length;
+        }
+    });
+
+    // Generate the HTML for the stats
+    for (const strategy in stats) {
         statsHTML += `
             <div>
                 <h3>${strategy}</h3>
-                <p>Wins: ${strategyData.wins}</p>
-                <p>Losses: ${strategyData.losses}</p>
-                <p>Max Win Streak: ${strategyData.maxWinStreak}</p>
-                <p>Max Loss Streak: ${strategyData.maxLossStreak}</p>
+                <p>Wins: ${stats[strategy].wins}</p>
+                <p>Losses: ${stats[strategy].losses}</p>
+                <p>Max Win Streak: ${stats[strategy].maxWinStreak}</p>
+                <p>Max Loss Streak: ${stats[strategy].maxLossStreak}</p>
             </div>
         `;
     }
