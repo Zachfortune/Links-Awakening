@@ -11,11 +11,13 @@ let strategyPerformance = {
 };
 
 function recordResult(result) {
-    history.push(result);
+    const predictions = predictNextHand();
+    const winningStrategy = determineWinningStrategy(result, predictions);
+    
+    history.push({ result, winningStrategy });
     updateCounts(result);
-    const winningStrategy = determineWinningStrategy(result);
-    updateStrategyPerformance(winningStrategy);
-    updateHistoryTable(winningStrategy);
+    updateStrategyPerformance(winningStrategy, predictions, result);
+    updateHistoryTable();
     updatePredictions();
     updateChart();
     updatePerformanceTable();
@@ -46,11 +48,11 @@ function updateCounts(result) {
     if (result === 'T') tieCount++;
 }
 
-function updateHistoryTable(winningStrategy = '') {
+function updateHistoryTable() {
     const tableBody = document.getElementById('history-table-body');
     tableBody.innerHTML = '';
-    history.forEach((result, index) => {
-        const row = `<tr><td>${index + 1}</td><td>${result}</td><td>${winningStrategy}</td></tr>`;
+    history.forEach((entry, index) => {
+        const row = `<tr><td>${index + 1}</td><td>${entry.result}</td><td>${entry.winningStrategy || 'None'}</td></tr>`;
         tableBody.innerHTML += row;
     });
 }
@@ -85,25 +87,26 @@ function predictNextHand() {
     return predictions;
 }
 
-function determineWinningStrategy(result) {
-    const predictions = predictNextHand();
-    let winningStrategy = '';
+function determineWinningStrategy(result, predictions) {
+    let winningStrategy = null;
 
     for (const strategy in predictions) {
         if (predictions[strategy] === result) {
-            strategyPerformance[strategy].wins++;
             winningStrategy = strategy;
-        } else {
-            strategyPerformance[strategy].losses++;
+            break;
         }
     }
 
     return winningStrategy;
 }
 
-function updateStrategyPerformance(winningStrategy) {
-    if (winningStrategy) {
-        strategyPerformance[winningStrategy].wins++;
+function updateStrategyPerformance(winningStrategy, predictions, result) {
+    for (const strategy in predictions) {
+        if (strategy === winningStrategy) {
+            strategyPerformance[strategy].wins++;
+        } else {
+            strategyPerformance[strategy].losses++;
+        }
     }
 }
 
