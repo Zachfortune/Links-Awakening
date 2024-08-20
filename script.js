@@ -49,6 +49,24 @@ class Strategy {
             this.currentLossStreak = Math.max(0, this.currentLossStreak - 1);
             this.position = (this.position - 1 + this.sequence.length) % this.sequence.length;
         }
+
+        // Recalculate max streaks
+        if (this.currentWinStreak < this.maxWinStreak) {
+            this.maxWinStreak = this.currentWinStreak;
+        }
+        if (this.currentLossStreak < this.maxLossStreak) {
+            this.maxLossStreak = this.currentLossStreak;
+        }
+    }
+
+    resetStats() {
+        this.position = 0;
+        this.wins = 0;
+        this.losses = 0;
+        this.currentWinStreak = 0;
+        this.currentLossStreak = 0;
+        this.maxWinStreak = 0;
+        this.maxLossStreak = 0;
     }
 
     getStats() {
@@ -106,6 +124,21 @@ function deleteLastHand() {
     updatePredictions();
     updateChart();
     updateStrategyStats();
+
+    if (history.length === 0) {
+        resetAllStrategies();
+        playerCount = 0;
+        bankerCount = 0;
+        tieCount = 0;
+        updateChart();
+        updateStrategyStats();
+    }
+}
+
+function resetAllStrategies() {
+    for (const strategy in strategies) {
+        strategies[strategy].resetStats();
+    }
 }
 
 function updateCounts(result) {
