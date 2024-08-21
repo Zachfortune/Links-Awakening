@@ -247,7 +247,7 @@ function updateCountBoxes() {
     document.getElementById('tie-count-box').innerText = tieCount;
 }
 
-// Dark Moode Toggle
+// Dark Modde Toggle
 document.getElementById('toggle-dark-mode').addEventListener('click', function() {
     document.body.classList.toggle('dark-mode');
 });
