@@ -145,7 +145,11 @@ button[delete] {
     color: #ddd; /* Light gray text */
 }
 
+.strategy-loss {
+    color: darkred; /* Dark red for straategies with loss streak of 4 or more */
+}
+
 .dark-mode #strategy-stats div {
-    background-color: #222; /* Eveen darker gray in dark mode */
+    background-color: #222; /* Even darker gray in dark mode */
     border: 1px solid #555;
 }
