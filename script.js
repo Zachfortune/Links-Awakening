@@ -184,9 +184,9 @@ function updatePredictions() {
 
     for (const strategy in strategies) {
         const stats = strategies[strategy].getStats();
-        const strategyColor = stats.currentLossStreak >= 4 ? 'darkred' : 'white';
+        const strategyColor = stats.currentLossStreak >= 4 ? 'darkred' : 'black'; // Default to bold black, change to dark red if loss streak is 4 or more
 
-        predictionsHTML += `<p><strong style="color: ${strategyColor};">${strategies[strategy].name}:</strong> ${strategies[strategy].predict()}</p>`;
+        predictionsHTML += `<p><strong style="color: ${strategyColor}; font-weight: bold;">${strategies[strategy].name}:</strong> ${strategies[strategy].predict()}</p>`;
     }
 
     predictionResults.innerHTML = predictionsHTML;
@@ -249,7 +249,7 @@ function updateCountBoxes() {
     document.getElementById('tie-count-box').innerText = tieCount;
 }
 
-// Dark Mode Togggle
+// Dark Mode Togglle
 document.getElementById('toggle-dark-mode').addEventListener('click', function() {
     document.body.classList.toggle('dark-mode');
 });
