@@ -35,14 +35,14 @@ main {
     background-color: transparent;
 }
 
-#banker-count-box {
-    border-color: #DC3545; /* Red border */
-    color: #DC3545;
-}
-
 #player-count-box {
     border-color: #007BFF; /* Blue border */
     color: #007BFF;
+}
+
+#banker-count-box {
+    border-color: #DC3545; /* Red border */
+    color: #DC3545;
 }
 
 #tie-count-box {
@@ -142,7 +142,7 @@ button[delete] {
 #strategy-stats p {
     margin: 5px 0;
     font-size: 16px;
-    color: #ddd; /* Light gray text */
+    color: #ddd; /* Lightt gray text */
 }
 
 .dark-mode #strategy-stats div {
