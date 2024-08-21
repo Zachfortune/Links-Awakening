@@ -223,6 +223,7 @@ function updateStrategyStats() {
     for (const strategy in strategies) {
         const stats = strategies[strategy].getStats();
         const strategyClass = stats.currentLossStreak >= 4 ? 'strategy-loss' : '';
+        const textColor = stats.currentLossStreak >= 4 ? 'darkred' : 'white';
 
         // Log the class application
         if (strategyClass === 'strategy-loss') {
@@ -232,7 +233,7 @@ function updateStrategyStats() {
         }
 
         statsHTML += `
-            <div class="${strategyClass}">
+            <div style="color: ${textColor};">
                 <h3>${strategies[strategy].name}</h3>
                 <p>Wins: ${stats.wins}</p>
                 <p>Losses: ${stats.losses}</p>
