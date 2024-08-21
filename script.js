@@ -222,8 +222,9 @@ function updateStrategyStats() {
 
     for (const strategy in strategies) {
         const stats = strategies[strategy].getStats();
+        const strategyClass = stats.currentLossStreak >= 4 ? 'strategy-loss' : '';
         statsHTML += `
-            <div>
+            <div class="${strategyClass}">
                 <h3>${strategies[strategy].name}</h3>
                 <p>Wins: ${stats.wins}</p>
                 <p>Losses: ${stats.losses}</p>
