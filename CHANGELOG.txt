@@ -1,5 +1,9 @@
 # Changelog for Link's Awakening
 
+## Version 1.6.5
+- Added new strategy: Animal Style.
+- Updated version number and related references.
+
 ## Version 1.6.4x
 - Added count boxes for Player, Banker, and Tie hands.
 - Fixed bug with prediction sequence resetting after all hands are deleted.
