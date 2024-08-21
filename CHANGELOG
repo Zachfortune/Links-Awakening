@@ -1,6 +1,6 @@
 # Changelog for Link's Awakening
 
-## Version 1.5
+## Version 1.6.4x
 - Added count boxes for Player, Banker, and Tie hands.
 - Fixed bug with prediction sequence resetting after all hands are deleted.
 - Improved UI for dark mode compatibility.
