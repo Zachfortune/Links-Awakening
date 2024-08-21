@@ -135,7 +135,7 @@ function deleteLastHand() {
         updateChart();
         updateStrategyStats();
         updatePredictions();
-        updateCountBoxes(); // Reset the count boxes
+        updateCountBoxes(); // Reseet the count boxes
     }
 }
 
@@ -158,106 +158,4 @@ function reverseUpdateCounts(result) {
 }
 
 function updateHistoryTable() {
-    const tableBody = document.getElementById('history-table-body');
-    tableBody.innerHTML = '';
-    history.forEach((result, index) => {
-        const row = `<tr><td>${index + 1}</td><td>${result}</td></tr>`;
-        tableBody.innerHTML += row;
-    });
-}
-
-function updateStrategies(result) {
-    for (const strategy in strategies) {
-        strategies[strategy].update(result);
-    }
-}
-
-function reverseUpdateStrategies(result) {
-    for (const strategy in strategies) {
-        strategies[strategy].reverseUpdate(result);
-    }
-}
-
-function updatePredictions() {
-    const predictionResults = document.getElementById('prediction-results');
-    let predictionsHTML = '';
-
-    for (const strategy in strategies) {
-        predictionsHTML += `<p><strong>${strategies[strategy].name}:</strong> ${strategies[strategy].predict()}</p>`;
-    }
-
-    predictionResults.innerHTML = predictionsHTML;
-}
-
-function updateChart() {
-    const ctx = document.getElementById('myChart').getContext('2d');
-
-    if (myChart) {
-        myChart.destroy();
-    }
-
-    myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Player', 'Banker', 'Tie'],
-            datasets: [{
-                label: 'Count',
-                data: [playerCount, bankerCount, tieCount],
-                backgroundColor: ['#4CAF50', '#f44336', '#FFC107'],
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-}
-
-function updateStrategyStats() {
-    const strategyStats = document.getElementById('strategy-stats');
-    strategyStats.innerHTML = ''; // Clear the existing content
-
-    for (const strategy in strategies) {
-        const stats = strategies[strategy].getStats();
-        
-        // Create a container for each strategy's stats
-        const strategyDiv = document.createElement('div');
-
-        // Check if the current loss streak is 4 or more
-        if (stats.currentLossStreak >= 4) {
-            strategyDiv.style.color = 'darkred'; // Apply dark red color
-        } else {
-            strategyDiv.style.color = 'white'; // Reset to the default color
-        }
-
-        // Construct the HTML content for this strategy
-        strategyDiv.innerHTML = `
-            <h3>${strategies[strategy].name}</h3>
-            <p>Wins: ${stats.wins}</p>
-            <p>Losses: ${stats.losses}</p>
-            <p>Win Rate: ${stats.winRate}%</p>
-            <p>Loss Rate: ${stats.lossRate}%</p>
-            <p>Max Win Streak: ${stats.maxWinStreak}</p>
-            <p>Max Loss Streak: ${stats.maxLossStreak}</p>
-            <p>Current Win Streak: ${stats.currentWinStreak}</p>
-            <p>Current Loss Streak: ${stats.currentLossStreak}</p>
-        `;
-
-        // Append the strategy div to the stats container
-        strategyStats.appendChild(strategyDiv);
-    }
-}
-
-function updateCountBoxes() {
-    document.getElementById('banker-count-box').innerText = bankerCount;
-    document.getElementById('player-count-box').innerText = playerCount;
-    document.getElementById('tie-count-box').innerText = tieCount;
-}
-
-// Dark Modde Toggle
-document.getElementById('toggle-dark-mode').addEventListener('click', function() {
-    document.body.classList.toggle('dark-mode');
-});
+    const tableBody = document.getElement
