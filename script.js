@@ -125,7 +125,10 @@ function deleteLastHand() {
     updatePredictions();
     updateChart();
     updateStrategyStats();
-    updateCountBoxes(); // Update the count boxes
+    updateCountBoxes();
+
+    // Recheck the predictions after deletion
+    updatePredictions();
 
     if (history.length === 0) {
         fullResetAllStrategies();
@@ -135,7 +138,7 @@ function deleteLastHand() {
         updateChart();
         updateStrategyStats();
         updatePredictions();
-        updateCountBoxes(); // Reset the count boxes
+        updateCountBoxes();
     }
 }
 
@@ -249,7 +252,7 @@ function updateCountBoxes() {
     document.getElementById('tie-count-box').innerText = tieCount;
 }
 
-// Dark Mode Togglle
+// Daark Mode Toggle
 document.getElementById('toggle-dark-mode').addEventListener('click', function() {
     document.body.classList.toggle('dark-mode');
 });
