@@ -1,7 +1,7 @@
 # Changelog for Link's Awakening
 
 ## Version 1.6.5
-- Added new strategy: Animal Style (sequence: BBBBPPPP).
+- Added new strategy: Animal Style.
 - Updated version number and related references.
 - Added feature: When a strategy has a current loss streak of 4 or greater, the text in that strategy's box turns dark red.
 
