@@ -145,8 +145,10 @@ button[delete] {
     color: #ddd; /* Light gray text */
 }
 
-.strategy-loss {
-    color: darkred !important; /* Ensures that the color change is applied */
+/* More specific selectors to ensure color change */
+#strategy-stats .strategy-loss h3,
+#strategy-stats .strategy-loss p {
+    color: darkred !important;
 }
 
 .dark-mode #strategy-stats div {
