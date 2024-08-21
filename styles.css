@@ -125,7 +125,7 @@ button[delete] {
 }
 
 #strategy-stats div {
-    background-color: #444; /* Darkk gray background */
+    background-color: #444; /* Dark gray background */
     border: 1px solid #ddd;
     padding: 10px;
     flex: 1;
@@ -146,6 +146,6 @@ button[delete] {
 }
 
 .dark-mode #strategy-stats div {
-    background-color: #222; /* Even darker gray in dark mode */
+    background-color: #222; /* Eveen darker gray in dark mode */
     border: 1px solid #555;
 }
