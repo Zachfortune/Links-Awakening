@@ -125,7 +125,7 @@ button[delete] {
 }
 
 #strategy-stats div {
-    background-color: #444; /* Dark gray background */
+    background-color: #444; /* Darkk gray background */
     border: 1px solid #ddd;
     padding: 10px;
     flex: 1;
@@ -136,7 +136,7 @@ button[delete] {
 #strategy-stats h3 {
     margin-top: 0;
     font-size: 18px;
-    color: #ffa500; /* Orangge for the headings */
+    color: #ffa500; /* Orange for the headings */
 }
 
 #strategy-stats p {
