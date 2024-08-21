@@ -18,6 +18,38 @@ main {
     padding: 20px;
 }
 
+#count-boxes {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.count-box {
+    width: 80px;
+    height: 50px;
+    border: 2px solid;
+    margin: 0 10px;
+    font-size: 24px;
+    text-align: center;
+    line-height: 50px;
+    background-color: transparent;
+}
+
+#banker-count-box {
+    border-color: #DC3545; /* Red border */
+    color: #DC3545;
+}
+
+#player-count-box {
+    border-color: #007BFF; /* Blue border */
+    color: #007BFF;
+}
+
+#tie-count-box {
+    border-color: #28A745; /* Green border */
+    color: #28A745;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -104,7 +136,7 @@ button[delete] {
 #strategy-stats h3 {
     margin-top: 0;
     font-size: 18px;
-    color: #ffa500; /* Orangee for the headings */
+    color: #ffa500; /* Orangge for the headings */
 }
 
 #strategy-stats p {
