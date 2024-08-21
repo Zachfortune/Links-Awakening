@@ -146,8 +146,9 @@ button[delete] {
 }
 
 .strategy-loss {
-    color: darkred; /* Dark red for strategies with loss streak of 4 or more */
+    color: darkred !important;
 }
+
 
 .dark-mode #strategy-stats div {
     background-color: #222; /* Even darker gray in dark mode */
