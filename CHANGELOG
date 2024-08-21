@@ -1,0 +1,13 @@
+# Changelog for Link's Awakening
+
+## Version 1.5
+- Added count boxes for Player, Banker, and Tie hands.
+- Fixed bug with prediction sequence resetting after all hands are deleted.
+- Improved UI for dark mode compatibility.
+
+## Version 1.4
+- Added new strategies: The Gentleman and Mr. Miyagi.
+- Improved strategy statistics tracking.
+
+## Version 1.3
+- Initial release with basic strategies and predictions.
