@@ -111,6 +111,7 @@ function recordResult(result) {
     updatePredictions();
     updateChart();
     updateStrategyStats();
+    updateCountBoxes(); // Update the count boxes
 }
 
 function deleteLastHand() {
@@ -123,6 +124,7 @@ function deleteLastHand() {
     updatePredictions();
     updateChart();
     updateStrategyStats();
+    updateCountBoxes(); // Update the count boxes
 
     if (history.length === 0) {
         fullResetAllStrategies();
@@ -132,6 +134,7 @@ function deleteLastHand() {
         updateChart();
         updateStrategyStats();
         updatePredictions();
+        updateCountBoxes(); // Reset the count boxes
     }
 }
 
@@ -236,7 +239,13 @@ function updateStrategyStats() {
     strategyStats.innerHTML = statsHTML;
 }
 
-// Dark Modde Toggle
+function updateCountBoxes() {
+    document.getElementById('banker-count-box').innerText = bankerCount;
+    document.getElementById('player-count-box').innerText = playerCount;
+    document.getElementById('tie-count-box').innerText = tieCount;
+}
+
+// Darkk Mode Toggle
 document.getElementById('toggle-dark-mode').addEventListener('click', function() {
     document.body.classList.toggle('dark-mode');
 });
