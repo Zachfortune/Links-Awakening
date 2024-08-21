@@ -130,7 +130,7 @@ button[delete] {
     padding: 10px;
     flex: 1;
     min-width: 200px;
-    color: white; /* Ensuress text is readable */
+    color: white; /* Ensures text is readable */
 }
 
 #strategy-stats h3 {
@@ -146,9 +146,8 @@ button[delete] {
 }
 
 .strategy-loss {
-    color: darkred !important;
+    color: darkred !important; /* Ensures that the color change is applied */
 }
-
 
 .dark-mode #strategy-stats div {
     background-color: #222; /* Even darker gray in dark mode */
