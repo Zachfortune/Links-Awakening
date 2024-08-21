@@ -218,36 +218,37 @@ function updateChart() {
 
 function updateStrategyStats() {
     const strategyStats = document.getElementById('strategy-stats');
-    let statsHTML = '';
+    strategyStats.innerHTML = ''; // Clear the existing content
 
     for (const strategy in strategies) {
         const stats = strategies[strategy].getStats();
-        const strategyClass = stats.currentLossStreak >= 4 ? 'strategy-loss' : '';
-        const textColor = stats.currentLossStreak >= 4 ? 'darkred' : 'white';
+        
+        // Create a container for each strategy's stats
+        const strategyDiv = document.createElement('div');
 
-        // Log the class application
-        if (strategyClass === 'strategy-loss') {
-            console.log(`Applying dark red text to ${strategies[strategy].name} with current loss streak of ${stats.currentLossStreak}`);
+        // Check if the current loss streak is 4 or more
+        if (stats.currentLossStreak >= 4) {
+            strategyDiv.style.color = 'darkred'; // Apply dark red color
         } else {
-            console.log(`Keeping default text color for ${strategies[strategy].name} with current loss streak of ${stats.currentLossStreak}`);
+            strategyDiv.style.color = 'white'; // Reset to the default color
         }
 
-        statsHTML += `
-            <div style="color: ${textColor};">
-                <h3>${strategies[strategy].name}</h3>
-                <p>Wins: ${stats.wins}</p>
-                <p>Losses: ${stats.losses}</p>
-                <p>Win Rate: ${stats.winRate}%</p>
-                <p>Loss Rate: ${stats.lossRate}%</p>
-                <p>Max Win Streak: ${stats.maxWinStreak}</p>
-                <p>Max Loss Streak: ${stats.maxLossStreak}</p>
-                <p>Current Win Streak: ${stats.currentWinStreak}</p>
-                <p>Current Loss Streak: ${stats.currentLossStreak}</p>
-            </div>
+        // Construct the HTML content for this strategy
+        strategyDiv.innerHTML = `
+            <h3>${strategies[strategy].name}</h3>
+            <p>Wins: ${stats.wins}</p>
+            <p>Losses: ${stats.losses}</p>
+            <p>Win Rate: ${stats.winRate}%</p>
+            <p>Loss Rate: ${stats.lossRate}%</p>
+            <p>Max Win Streak: ${stats.maxWinStreak}</p>
+            <p>Max Loss Streak: ${stats.maxLossStreak}</p>
+            <p>Current Win Streak: ${stats.currentWinStreak}</p>
+            <p>Current Loss Streak: ${stats.currentLossStreak}</p>
         `;
-    }
 
-    strategyStats.innerHTML = statsHTML;
+        // Append the strategy div to the stats container
+        strategyStats.appendChild(strategyDiv);
+    }
 }
 
 function updateCountBoxes() {
@@ -256,7 +257,7 @@ function updateCountBoxes() {
     document.getElementById('tie-count-box').innerText = tieCount;
 }
 
-// Dark Mode Toggle
+// Dark Modde Toggle
 document.getElementById('toggle-dark-mode').addEventListener('click', function() {
     document.body.classList.toggle('dark-mode');
 });
