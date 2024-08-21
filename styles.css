@@ -130,7 +130,7 @@ button[delete] {
     padding: 10px;
     flex: 1;
     min-width: 200px;
-    color: white; /* Ensures text is readable */
+    color: white; /* Ensuress text is readable */
 }
 
 #strategy-stats h3 {
@@ -146,7 +146,7 @@ button[delete] {
 }
 
 .strategy-loss {
-    color: darkred; /* Dark red for straategies with loss streak of 4 or more */
+    color: darkred; /* Dark red for strategies with loss streak of 4 or more */
 }
 
 .dark-mode #strategy-stats div {
