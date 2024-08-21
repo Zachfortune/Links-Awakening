@@ -223,6 +223,14 @@ function updateStrategyStats() {
     for (const strategy in strategies) {
         const stats = strategies[strategy].getStats();
         const strategyClass = stats.currentLossStreak >= 4 ? 'strategy-loss' : '';
+
+        // Log the class application
+        if (strategyClass === 'strategy-loss') {
+            console.log(`Applying dark red text to ${strategies[strategy].name} with current loss streak of ${stats.currentLossStreak}`);
+        } else {
+            console.log(`Keeping default text color for ${strategies[strategy].name} with current loss streak of ${stats.currentLossStreak}`);
+        }
+
         statsHTML += `
             <div class="${strategyClass}">
                 <h3>${strategies[strategy].name}</h3>
@@ -247,7 +255,7 @@ function updateCountBoxes() {
     document.getElementById('tie-count-box').innerText = tieCount;
 }
 
-// Dark Modde Toggle
+// Dark Mode Toggle
 document.getElementById('toggle-dark-mode').addEventListener('click', function() {
     document.body.classList.toggle('dark-mode');
 });
