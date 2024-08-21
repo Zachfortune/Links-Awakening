@@ -221,64 +221,26 @@ function updateChart() {
 
 function updateStrategyStats() {
     const strategyStats = document.getElementById('strategy-stats');
-    strategyStats.innerHTML = ''; // Clear the existing content
+    let statsHTML = '';
 
     for (const strategy in strategies) {
         const stats = strategies[strategy].getStats();
-        const color = stats.currentLossStreak >= 4 ? 'darkred' : 'white';
-
-        // Create and style each text element individually
-        const strategyDiv = document.createElement('div');
-        const h3 = document.createElement('h3');
-        h3.textContent = strategies[strategy].name;
-        h3.style.color = color;
-
-        const pWins = document.createElement('p');
-        pWins.textContent = `Wins: ${stats.wins}`;
-        pWins.style.color = color;
-
-        const pLosses = document.createElement('p');
-        pLosses.textContent = `Losses: ${stats.losses}`;
-        pLosses.style.color = color;
-
-        const pWinRate = document.createElement('p');
-        pWinRate.textContent = `Win Rate: ${stats.winRate}%`;
-        pWinRate.style.color = color;
-
-        const pLossRate = document.createElement('p');
-        pLossRate.textContent = `Loss Rate: ${stats.lossRate}%`;
-        pLossRate.style.color = color;
-
-        const pMaxWinStreak = document.createElement('p');
-        pMaxWinStreak.textContent = `Max Win Streak: ${stats.maxWinStreak}`;
-        pMaxWinStreak.style.color = color;
-
-        const pMaxLossStreak = document.createElement('p');
-        pMaxLossStreak.textContent = `Max Loss Streak: ${stats.maxLossStreak}`;
-        pMaxLossStreak.style.color = color;
-
-        const pCurrentWinStreak = document.createElement('p');
-        pCurrentWinStreak.textContent = `Current Win Streak: ${stats.currentWinStreak}`;
-        pCurrentWinStreak.style.color = color;
-
-        const pCurrentLossStreak = document.createElement('p');
-        pCurrentLossStreak.textContent = `Current Loss Streak: ${stats.currentLossStreak}`;
-        pCurrentLossStreak.style.color = color;
-
-        // Append the elements to the strategy div
-        strategyDiv.appendChild(h3);
-        strategyDiv.appendChild(pWins);
-        strategyDiv.appendChild(pLosses);
-        strategyDiv.appendChild(pWinRate);
-        strategyDiv.appendChild(pLossRate);
-        strategyDiv.appendChild(pMaxWinStreak);
-        strategyDiv.appendChild(pMaxLossStreak);
-        strategyDiv.appendChild(pCurrentWinStreak);
-        strategyDiv.appendChild(pCurrentLossStreak);
-
-        // Append the strategy divv to the stats container
-        strategyStats.appendChild(strategyDiv);
+        statsHTML += `
+            <div>
+                <h3>${strategies[strategy].name}</h3>
+                <p>Wins: ${stats.wins}</p>
+                <p>Losses: ${stats.losses}</p>
+                <p>Win Rate: ${stats.winRate}%</p>
+                <p>Loss Rate: ${stats.lossRate}%</p>
+                <p>Max Win Streak: ${stats.maxWinStreak}</p>
+                <p>Max Loss Streak: ${stats.maxLossStreak}</p>
+                <p>Current Win Streak: ${stats.currentWinStreak}</p>
+                <p>Current Loss Streak: ${stats.currentLossStreak}</p>
+            </div>
+        `;
     }
+
+    strategyStats.innerHTML = statsHTML;
 }
 
 function updateCountBoxes() {
@@ -287,7 +249,7 @@ function updateCountBoxes() {
     document.getElementById('tie-count-box').innerText = tieCount;
 }
 
-// Dark Mode Toggle
+// Dark Mode Togggle
 document.getElementById('toggle-dark-mode').addEventListener('click', function() {
     document.body.classList.toggle('dark-mode');
 });
