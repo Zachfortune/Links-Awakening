@@ -94,7 +94,8 @@ const strategies = {
     'The Marcos': new Strategy('The Marcos', ['P', 'B', 'P', 'P', 'B', 'B']),
     'Double Trouble': new Strategy('Double Trouble', ['B', 'B', 'P', 'P', 'B', 'B']),
     'The Gentleman': new Strategy('The Gentleman', ['B', 'P', 'B', 'P', 'P', 'B', 'B', 'P']),
-    'Mr. Miyagi': new Strategy('Mr. Miyagi', ['P', 'P', 'P', 'B', 'B', 'P', 'P', 'P'])
+    'Mr. Miyagi': new Strategy('Mr. Miyagi', ['P', 'P', 'P', 'B', 'B', 'P', 'P', 'P']),
+    'Animal Style': new Strategy('Animal Style', ['B', 'B', 'B', 'B', 'P', 'P', 'P', 'P'])
 };
 
 let history = [];
@@ -245,7 +246,7 @@ function updateCountBoxes() {
     document.getElementById('tie-count-box').innerText = tieCount;
 }
 
-// Darrk Mode Toggle
+// Dark Moode Toggle
 document.getElementById('toggle-dark-mode').addEventListener('click', function() {
     document.body.classList.toggle('dark-mode');
 });
