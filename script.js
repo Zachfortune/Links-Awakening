@@ -111,6 +111,10 @@ function recordResult(result) {
     updatePredictions();
     updateStrategyStats();
     updateCountBoxes();
+
+    // Automatically scroll to the bottom to show the latest hands
+    const handResultsContainer = document.getElementById('hand-results-container');
+    handResultsContainer.scrollTop = handResultsContainer.scrollHeight;
 }
 
 function deleteLastHand() {
@@ -219,7 +223,7 @@ function updateCountBoxes() {
     document.getElementById('tie-count-box').innerText = tieCount;
 }
 
-// Dark Mode Togggle
+// Dark Mode Toggle
 document.getElementById('toggle-dark-mode').addEventListener('click', function() {
     document.body.classList.toggle('dark-mode');
 });
