@@ -48,10 +48,12 @@ class Strategy {
 
         if (this.predict() === result) {
             this.wins--;
-            this.currentWinStreak = Math.max(0, this.currentWinStreak - 1);
+            this.currentWinStreak--;
+            if (this.currentWinStreak < 0) this.currentWinStreak = 0;
         } else {
             this.losses--;
-            this.currentLossStreak = Math.max(0, this.currentLossStreak - 1);
+            this.currentLossStreak--;
+            if (this.currentLossStreak < 0) this.currentLossStreak = 0;
         }
     }
 
