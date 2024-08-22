@@ -42,12 +42,11 @@
 
         <section>
             <h2>Game History</h2>
-            <div id="hand-results"></div>
-        </section>
-
-        <section>
-            <h2>Results Chart</h2>
-            <canvas id="myChart"></canvas>
+            <div class="carousel-container">
+                <button class="carousel-control prev" onclick="prevHand()">❮</button>
+                <div class="carousel" id="hand-results"></div>
+                <button class="carousel-control next" onclick="nextHand()">❯</button>
+            </div>
         </section>
 
         <section>
@@ -56,7 +55,6 @@
         </section>
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
