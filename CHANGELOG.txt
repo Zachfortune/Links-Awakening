@@ -1,14 +1,19 @@
 # Changelog for Link's Awakening
 
-## Version 1.8
-- Made the game history scrollable using an HTML scrollbox to view the last 3 hands without scrolling the whole page.
-- Updated the buttons for Player, Banker, Tie, and Delete Last Hand to be full width.
-- Added a feature to handle touch scrolling properly on mobile devices for the game history section.
-- Updated version number and related references.
+## Version 1.9
+- Updated strategy statistics to display the next prediction in green for the strategy with the highest current win streak of 1 or more.
+- Added real-time display of predictions within each strategy's statistics box.
 
-## Version 1.6.7
-- Added feature to change the text color of the strategy in predictions to dark red when the current loss streak is 4 or greater.
-- Fixed issue where strategies did not reset properly after deleting all hands.
+## Version 1.8
+- Implemented a scrollbox for game history, allowing free scrolling while keeping the height fixed.
+- Added prediction display in real-time within each strategy's statistics box.
+
+## Version 1.7
+- Improved UI for dark mode compatibility.
+- Added visual indicators for current loss streaks in the prediction section.
+
+## Version 1.6.6
+- Fixed bug where text would not change to dark red after a 4 or greater current loss streak.
 
 ## Version 1.6.5
 - Added new strategy: Animal Style.
