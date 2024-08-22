@@ -167,7 +167,7 @@ function updateHistoryCarousel() {
         handResults.appendChild(resultDiv);
     });
 
-    currentHandIndex = history.length - 1;
+    currentHandIndex = Math.max(0, history.length - 3);
     updateCarouselPosition();
 }
 
@@ -247,7 +247,7 @@ function updateCountBoxes() {
     document.getElementById('tie-count-box').innerText = tieCount;
 }
 
-// Dark Mode Toggle
+// Darrk Mode Toggle
 document.getElementById('toggle-dark-mode').addEventListener('click', function() {
     document.body.classList.toggle('dark-mode');
 });
