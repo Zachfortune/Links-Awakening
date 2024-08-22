@@ -83,7 +83,7 @@ class Strategy {
             currentLossStreak: this.currentLossStreak,
             winRate: winRate,
             lossRate: lossRate,
-            prediction: this.predict() // Include the prediction in the stats
+            prediction: this.predict()
         };
     }
 }
@@ -198,8 +198,20 @@ function updateStrategyStats() {
     const strategyStats = document.getElementById('strategy-stats');
     let statsHTML = '';
 
+    let highestWinStreak = 0;
+    let highestWinStrategy = null;
+
     for (const strategy in strategies) {
         const stats = strategies[strategy].getStats();
+        if (stats.currentWinStreak > highestWinStreak) {
+            highestWinStreak = stats.currentWinStreak;
+            highestWinStrategy = strategy;
+        }
+    }
+
+    for (const strategy in strategies) {
+        const stats = strategies[strategy].getStats();
+        const predictionColor = strategy === highestWinStrategy && highestWinStreak > 0 ? 'green' : 'black';
         statsHTML += `
             <div>
                 <h3>${strategies[strategy].name}</h3>
@@ -211,7 +223,7 @@ function updateStrategyStats() {
                 <p>Max Loss Streak: ${stats.maxLossStreak}</p>
                 <p>Current Win Streak: ${stats.currentWinStreak}</p>
                 <p>Current Loss Streak: ${stats.currentLossStreak}</p>
-                <p><strong>Next Prediction:</strong> ${stats.prediction}</p>
+                <p><strong style="color: ${predictionColor};">Next Prediction:</strong> ${stats.prediction}</p>
             </div>
         `;
     }
