@@ -102,16 +102,15 @@ let history = [];
 let playerCount = 0;
 let bankerCount = 0;
 let tieCount = 0;
-let currentHandIndex = 0;
 
 function recordResult(result) {
     history.push(result);
     updateCounts(result);
-    updateHistoryCarousel();
+    updateHistory();
     updateStrategies(result);
     updatePredictions();
     updateStrategyStats();
-    updateCountBoxes(); // Update the count boxes
+    updateCountBoxes();
 }
 
 function deleteLastHand() {
@@ -120,7 +119,7 @@ function deleteLastHand() {
     const lastResult = history.pop();
     reverseUpdateCounts(lastResult);
     reverseUpdateStrategies(lastResult);
-    updateHistoryCarousel();
+    updateHistory();
     updatePredictions();
     updateStrategyStats();
     updateCountBoxes();
@@ -157,38 +156,14 @@ function reverseUpdateCounts(result) {
     if (result === 'T') tieCount--;
 }
 
-function updateHistoryCarousel() {
+function updateHistory() {
     const handResults = document.getElementById('hand-results');
     handResults.innerHTML = '';
 
-    history.forEach((result, index) => {
-        const resultDiv = document.createElement('div');
-        resultDiv.textContent = `Hand ${index + 1}: ${result}`;
-        handResults.appendChild(resultDiv);
+    const displayHistory = history.slice(-3); // Show last 3 hands
+    displayHistory.forEach((result, index) => {
+        handResults.innerHTML += `<p>Hand ${history.length - displayHistory.length + index + 1}: ${result}</p>`;
     });
-
-    currentHandIndex = Math.max(0, history.length - 3);
-    updateCarouselPosition();
-}
-
-function updateCarouselPosition() {
-    const handResults = document.getElementById('hand-results');
-    const offset = currentHandIndex * -100;
-    handResults.style.transform = `translateX(${offset}%)`;
-}
-
-function prevHand() {
-    if (currentHandIndex > 0) {
-        currentHandIndex--;
-        updateCarouselPosition();
-    }
-}
-
-function nextHand() {
-    if (currentHandIndex < history.length - 1) {
-        currentHandIndex++;
-        updateCarouselPosition();
-    }
 }
 
 function updateStrategies(result) {
@@ -209,7 +184,7 @@ function updatePredictions() {
 
     for (const strategy in strategies) {
         const stats = strategies[strategy].getStats();
-        const strategyColor = stats.currentLossStreak >= 4 ? 'darkred' : 'black'; // Default to bold black, change to dark red if loss streak is 4 or more
+        const strategyColor = stats.currentLossStreak >= 4 ? 'darkred' : 'black';
 
         predictionsHTML += `<p><strong style="color: ${strategyColor}; font-weight: bold;">${strategies[strategy].name}:</strong> ${strategies[strategy].predict()}</p>`;
     }
@@ -247,7 +222,7 @@ function updateCountBoxes() {
     document.getElementById('tie-count-box').innerText = tieCount;
 }
 
-// Darrk Mode Toggle
+// Dark Mode Toggle
 document.getElementById('toggle-dark-mode').addEventListener('click', function() {
     document.body.classList.toggle('dark-mode');
 });
