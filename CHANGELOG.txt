@@ -1,9 +1,13 @@
 # Changelog for Link's Awakening
 
-## Version 1.6.7
-- Strategy names in the prediction section now turn dark red when the current loss streak is 4 or greater.
-- Text color reverts to the original when the loss streak drops below 4 or resets.
+## Version 1.8
+- Made the game history scrollable to view the last 3 hands without scrolling the whole page.
+- Updated the buttons for Player, Banker, Tie, and Delete Last Hand to be full width.
 - Updated version number and related references.
+
+## Version 1.6.7
+- Added feature to change the text color of the strategy in predictions to dark red when the current loss streak is 4 or greater.
+- Fixed issue where strategies did not reset properly after deleting all hands.
 
 ## Version 1.6.5
 - Added new strategy: Animal Style.
