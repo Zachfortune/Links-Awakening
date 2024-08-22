@@ -82,7 +82,8 @@ class Strategy {
             currentWinStreak: this.currentWinStreak,
             currentLossStreak: this.currentLossStreak,
             winRate: winRate,
-            lossRate: lossRate
+            lossRate: lossRate,
+            prediction: this.predict() // Include the prediction in the stats
         };
     }
 }
@@ -161,7 +162,7 @@ function updateHistory() {
     const handResults = document.getElementById('hand-results');
     handResults.innerHTML = '';
 
-    // Display all hands, not just the last 3
+    // Display all hands
     history.forEach((result, index) => {
         handResults.innerHTML += `<p>Hand ${index + 1}: ${result}</p>`;
     });
@@ -210,6 +211,7 @@ function updateStrategyStats() {
                 <p>Max Loss Streak: ${stats.maxLossStreak}</p>
                 <p>Current Win Streak: ${stats.currentWinStreak}</p>
                 <p>Current Loss Streak: ${stats.currentLossStreak}</p>
+                <p><strong>Next Prediction:</strong> ${stats.prediction}</p>
             </div>
         `;
     }
