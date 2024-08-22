@@ -88,10 +88,12 @@ button[delete] {
 /* Scrollbox for game history */
 .scrollbox {
     width: 100%;
+    height: auto; /* Auto height to allow more content */
     overflow-y: auto;
     border: 1px solid #ddd;
     padding: 10px;
     box-sizing: border-box;
+    max-height: none; /* Ensure no restriction on visible hands */
 }
 
 #hand-results {
