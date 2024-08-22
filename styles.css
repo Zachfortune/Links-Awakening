@@ -88,7 +88,6 @@ button[delete] {
 /* Scrollbox for game history */
 .scrollbox {
     width: 100%;
-    max-height: 300px;  /* Increased max-height to show more hands when scrolling */
     overflow-y: auto;
     border: 1px solid #ddd;
     padding: 10px;
