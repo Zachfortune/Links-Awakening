@@ -102,15 +102,14 @@ let history = [];
 let playerCount = 0;
 let bankerCount = 0;
 let tieCount = 0;
-let myChart = null;
+let currentHandIndex = 0;
 
 function recordResult(result) {
     history.push(result);
     updateCounts(result);
-    updateHistoryTable();
+    updateHistoryCarousel();
     updateStrategies(result);
     updatePredictions();
-    updateChart();
     updateStrategyStats();
     updateCountBoxes(); // Update the count boxes
 }
@@ -121,9 +120,8 @@ function deleteLastHand() {
     const lastResult = history.pop();
     reverseUpdateCounts(lastResult);
     reverseUpdateStrategies(lastResult);
-    updateHistoryTable();
+    updateHistoryCarousel();
     updatePredictions();
-    updateChart();
     updateStrategyStats();
     updateCountBoxes();
 
@@ -135,7 +133,6 @@ function deleteLastHand() {
         playerCount = 0;
         bankerCount = 0;
         tieCount = 0;
-        updateChart();
         updateStrategyStats();
         updatePredictions();
         updateCountBoxes();
@@ -160,14 +157,38 @@ function reverseUpdateCounts(result) {
     if (result === 'T') tieCount--;
 }
 
-function updateHistoryTable() {
+function updateHistoryCarousel() {
     const handResults = document.getElementById('hand-results');
     handResults.innerHTML = '';
+
     history.forEach((result, index) => {
         const resultDiv = document.createElement('div');
-        resultDiv.textContent = `${index + 1}: ${result}`;
+        resultDiv.textContent = `Hand ${index + 1}: ${result}`;
         handResults.appendChild(resultDiv);
     });
+
+    currentHandIndex = history.length - 1;
+    updateCarouselPosition();
+}
+
+function updateCarouselPosition() {
+    const handResults = document.getElementById('hand-results');
+    const offset = currentHandIndex * -100;
+    handResults.style.transform = `translateX(${offset}%)`;
+}
+
+function prevHand() {
+    if (currentHandIndex > 0) {
+        currentHandIndex--;
+        updateCarouselPosition();
+    }
+}
+
+function nextHand() {
+    if (currentHandIndex < history.length - 1) {
+        currentHandIndex++;
+        updateCarouselPosition();
+    }
 }
 
 function updateStrategies(result) {
@@ -194,33 +215,6 @@ function updatePredictions() {
     }
 
     predictionResults.innerHTML = predictionsHTML;
-}
-
-function updateChart() {
-    const ctx = document.getElementById('myChart').getContext('2d');
-
-    if (myChart) {
-        myChart.destroy();
-    }
-
-    myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Player', 'Banker', 'Tie'],
-            datasets: [{
-                label: 'Count',
-                data: [playerCount, bankerCount, tieCount],
-                backgroundColor: ['#4CAF50', '#f44336', '#FFC107'],
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
 }
 
 function updateStrategyStats() {
