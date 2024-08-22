@@ -161,9 +161,9 @@ function updateHistory() {
     const handResults = document.getElementById('hand-results');
     handResults.innerHTML = '';
 
-    const displayHistory = history.slice(-3); // Show last 3 hands
-    displayHistory.forEach((result, index) => {
-        handResults.innerHTML += `<p>Hand ${history.length - displayHistory.length + index + 1}: ${result}</p>`;
+    // Display all hands, not just the last 3
+    history.forEach((result, index) => {
+        handResults.innerHTML += `<p>Hand ${index + 1}: ${result}</p>`;
     });
 }
 
