@@ -1,8 +1,9 @@
 # Changelog for Link's Awakening
 
 ## Version 1.8
-- Made the game history scrollable to view the last 3 hands without scrolling the whole page.
+- Made the game history scrollable using an HTML scrollbox to view the last 3 hands without scrolling the whole page.
 - Updated the buttons for Player, Banker, Tie, and Delete Last Hand to be full width.
+- Added a feature to handle touch scrolling properly on mobile devices for the game history section.
 - Updated version number and related references.
 
 ## Version 1.6.7
