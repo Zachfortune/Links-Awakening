@@ -199,19 +199,19 @@ function updateStrategyStats() {
     let statsHTML = '';
 
     let highestWinStreak = 0;
-    let highestWinStrategy = null;
 
+    // First, find the highest win streak
     for (const strategy in strategies) {
         const stats = strategies[strategy].getStats();
         if (stats.currentWinStreak > highestWinStreak) {
             highestWinStreak = stats.currentWinStreak;
-            highestWinStrategy = strategy;
         }
     }
 
+    // Now, apply the green color to all strategies with the highest win streak
     for (const strategy in strategies) {
         const stats = strategies[strategy].getStats();
-        const predictionColor = strategy === highestWinStrategy && highestWinStreak > 0 ? 'green' : 'black';
+        const predictionColor = stats.currentWinStreak === highestWinStreak && highestWinStreak > 0 ? 'green' : 'black';
         statsHTML += `
             <div>
                 <h3>${strategies[strategy].name}</h3>
