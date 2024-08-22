@@ -51,33 +51,34 @@ main {
 }
 
 /* Carousel container */
-.carousel-container {
+.carousel-wrapper {
     position: relative;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     margin-top: 20px;
+}
+
+.carousel-container {
+    overflow: hidden;
+    width: 100%;
+    max-width: 400px;
 }
 
 .carousel {
     display: flex;
-    overflow: hidden;
-    width: 100%;
-    max-width: 400px;
-    border: 1px solid #ddd;
-    background-color: #f9f9f9;
+    transition: transform 0.3s ease-in-out;
 }
 
 .carousel div {
     min-width: 100%;
     text-align: center;
     padding: 10px;
+    box-sizing: border-box;
 }
 
 .carousel-control {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
     background-color: #FFA500; /* Orange arrow color */
     color: white;
     border: none;
@@ -85,6 +86,7 @@ main {
     padding: 10px;
     font-size: 18px;
     opacity: 0.7;
+    z-index: 1;
 }
 
 .carousel-control:hover {
@@ -92,11 +94,11 @@ main {
 }
 
 .prev {
-    left: 0;
+    left: -45px; /* Adjusted for better positioning */
 }
 
 .next {
-    right: 0;
+    right: -45px; /* Adjusted for better positioning */
 }
 
 button {
