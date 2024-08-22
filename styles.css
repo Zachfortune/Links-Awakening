@@ -8,7 +8,7 @@ body {
 }
 
 header {
-    background-color: #FFA500; /* Changed from purple to orange */
+    background-color: #FFA500;
     color: #fff;
     padding: 10px;
     text-align: center;
@@ -22,13 +22,14 @@ main {
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
+    flex-wrap: wrap; /* Allows boxes to stack on smaller screens */
 }
 
 .count-box {
     width: 80px;
     height: 50px;
     border: 2px solid;
-    margin: 0 10px;
+    margin: 10px 10px;
     font-size: 24px;
     text-align: center;
     line-height: 50px;
@@ -36,17 +37,17 @@ main {
 }
 
 #player-count-box {
-    border-color: #007BFF; /* Blue border */
+    border-color: #007BFF;
     color: #007BFF;
 }
 
 #banker-count-box {
-    border-color: #DC3545; /* Red border */
+    border-color: #DC3545;
     color: #DC3545;
 }
 
 #tie-count-box {
-    border-color: #28A745; /* Green border */
+    border-color: #28A745;
     color: #28A745;
 }
 
@@ -71,10 +72,12 @@ button {
     border: none;
     cursor: pointer;
     margin: 5px;
+    width: 100%; /* Full-width buttons on mobile */
+    max-width: 200px; /* Limits button width on larger screens */
 }
 
 button#toggle-dark-mode {
-    background-color: #FFA500; /* Orange for the dark mode toggle */
+    background-color: #FFA500;
 }
 
 button:hover {
@@ -83,19 +86,19 @@ button:hover {
 
 /* Specific button colors */
 button[player] {
-    background-color: #007BFF; /* Blue for Player */
+    background-color: #007BFF;
 }
 
 button[banker] {
-    background-color: #DC3545; /* Red for Banker */
+    background-color: #DC3545;
 }
 
 button[tie] {
-    background-color: #28A745; /* Green for Tie */
+    background-color: #28A745;
 }
 
 button[delete] {
-    background-color: #FF00FF; /* Magenta for Delete Last Hand */
+    background-color: #FF00FF;
 }
 
 .dark-mode {
@@ -104,7 +107,7 @@ button[delete] {
 }
 
 .dark-mode header {
-    background-color: #FF8C00; /* Darker Orange for header in dark mode */
+    background-color: #FF8C00;
 }
 
 .dark-mode button {
@@ -125,27 +128,59 @@ button[delete] {
 }
 
 #strategy-stats div {
-    background-color: #444; /* Dark gray background */
+    background-color: #444;
     border: 1px solid #ddd;
     padding: 10px;
     flex: 1;
     min-width: 200px;
-    color: white; /* Ensures text is readable */
+    color: white;
 }
 
 #strategy-stats h3 {
     margin-top: 0;
     font-size: 18px;
-    color: #ffa500; /* Orange for the headings */
+    color: #ffa500;
 }
 
 #strategy-stats p {
     margin: 5px 0;
     font-size: 16px;
-    color: #ddd; /* Lightt gray text */
+    color: #ddd;
 }
 
 .dark-mode #strategy-stats div {
-    background-color: #222; /* Even darker gray in dark mode */
+    background-color: #222;
     border: 1px solid #555;
+}
+
+/* Mobile-friendly adjustments */
+@media (max-width: 600px) {
+    header h1 {
+        font-size: 20px; /* Smaller header font */
+    }
+
+    main {
+        padding: 10px; /* Reduce padding */
+    }
+
+    #count-boxes {
+        flex-direction: column; /* Stack boxes vertically */
+        align-items: center; /* Center align */
+    }
+
+    .count-box {
+        width: 100%; /* Full-width boxes on mobile */
+        max-width: 150px; /* Limit width on mobile */
+        font-size: 20px; /* Smaller font size */
+    }
+
+    button {
+        padding: 8px 10px;
+        font-size: 14px;
+    }
+
+    #strategy-stats div {
+        min-width: 100%; /* Full-width stats boxes on mobile */
+        max-width: 100%;
+    }
 }
