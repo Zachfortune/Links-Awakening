@@ -161,11 +161,12 @@ function reverseUpdateCounts(result) {
 }
 
 function updateHistoryTable() {
-    const tableBody = document.getElementById('history-table-body');
-    tableBody.innerHTML = '';
+    const handResults = document.getElementById('hand-results');
+    handResults.innerHTML = '';
     history.forEach((result, index) => {
-        const row = `<tr><td>${index + 1}</td><td>${result}</td></tr>`;
-        tableBody.innerHTML += row;
+        const resultDiv = document.createElement('div');
+        resultDiv.textContent = `${index + 1}: ${result}`;
+        handResults.appendChild(resultDiv);
     });
 }
 
@@ -252,7 +253,7 @@ function updateCountBoxes() {
     document.getElementById('tie-count-box').innerText = tieCount;
 }
 
-// Dark Mode Ttoggle
+// Dark Mode Toggle
 document.getElementById('toggle-dark-mode').addEventListener('click', function() {
     document.body.classList.toggle('dark-mode');
 });
