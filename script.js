@@ -223,22 +223,3 @@ function updateCountBoxes() {
 document.getElementById('toggle-dark-mode').addEventListener('click', function() {
     document.body.classList.toggle('dark-mode');
 });
-
-// Handle scrolling on mobile devices
-document.getElementById('hand-results-container').addEventListener('touchstart', function(e) {
-    const container = this;
-    const scrollTop = container.scrollTop;
-    const scrollHeight = container.scrollHeight;
-    const offsetHeight = container.offsetHeight;
-    const contentHeight = scrollHeight - offsetHeight;
-
-    if (contentHeight === 0 || (scrollTop === 0 && e.touches[0].clientY > e.touches[0].pageY) || (scrollTop === contentHeight && e.touches[0].clientY < e.touches[0].pageY)) {
-        e.preventDefault();
-    }
-});
-
-document.getElementById('hand-results-container').addEventListener('touchmove', function(e) {
-    if (this.scrollHeight > this.clientHeight) {
-        e.stopPropagation();
-    }
-}, { passive: false });
