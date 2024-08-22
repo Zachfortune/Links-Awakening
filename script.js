@@ -124,9 +124,6 @@ function deleteLastHand() {
     updateStrategyStats();
     updateCountBoxes();
 
-    // Recheck the predictions after deletion
-    updatePredictions();
-
     if (history.length === 0) {
         fullResetAllStrategies();
         playerCount = 0;
