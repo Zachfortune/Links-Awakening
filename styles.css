@@ -55,9 +55,9 @@ button {
     color: white;
     border: none;
     cursor: pointer;
-    margin: 5px 0; /* Adds space between buttons */
-    width: 100%; /* Full width buttons */
-    display: block; /* Ensures buttons take full width */
+    margin: 5px 0;
+    width: 100%;
+    display: block;
 }
 
 button#toggle-dark-mode {
@@ -85,8 +85,13 @@ button[delete] {
     background-color: #FF00FF;
 }
 
-#hand-results {
+#hand-results-container {
+    max-height: 200px;
+    overflow-y: auto;
     margin-top: 10px;
+}
+
+#hand-results {
     font-size: 18px;
     line-height: 1.5;
 }
