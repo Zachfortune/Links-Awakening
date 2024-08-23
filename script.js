@@ -200,26 +200,40 @@ function updateStrategyStats() {
     const strategyStats = document.getElementById('strategy-stats');
     let statsHTML = '';
 
-    let highestWinStreak = 0;
+    let highestWinRate = 0;
+    let lowestWinRate = 100;
+    let highestWinRateStrategy = null;
+    let lowestWinRateStrategy = null;
 
-    // First, find the highest win streak
+    // First, find the highest and lowest win rates
     for (const strategy in strategies) {
         const stats = strategies[strategy].getStats();
-        if (stats.currentWinStreak > highestWinStreak) {
-            highestWinStreak = stats.currentWinStreak;
+        const winRate = parseFloat(stats.winRate);
+
+        if (winRate > highestWinRate) {
+            highestWinRate = winRate;
+            highestWinRateStrategy = strategy;
+        }
+
+        if (winRate < lowestWinRate) {
+            lowestWinRate = winRate;
+            lowestWinRateStrategy = strategy;
         }
     }
 
-    // Now, apply the green color to all strategies with the highest win streak
+    // Now, apply the yellow color to the strategy with the highest win rate
+    // and orange color to the strategy with the lowest win rate
     for (const strategy in strategies) {
         const stats = strategies[strategy].getStats();
-        const predictionColor = stats.currentWinStreak === highestWinStreak && highestWinStreak > 0 ? 'green' : 'black';
+        const winRateColor = strategy === highestWinRateStrategy ? 'yellow' : strategy === lowestWinRateStrategy ? 'orange' : 'white';
+        const predictionColor = stats.currentWinStreak === Math.max(...Object.values(strategies).map(s => s.getStats().currentWinStreak)) && stats.currentWinStreak > 0 ? 'green' : 'black';
+
         statsHTML += `
             <div>
-                <h3>${strategies[strategy].name}</h3>
+                <h3 style="color: ${winRateColor};">${strategies[strategy].name}</h3>
                 <p>Wins: ${stats.wins}</p>
                 <p>Losses: ${stats.losses}</p>
-                <p>Win Rate: ${stats.winRate}%</p>
+                <p style="color: ${winRateColor};">Win Rate: ${stats.winRate}%</p>
                 <p>Loss Rate: ${stats.lossRate}%</p>
                 <p>Max Win Streak: ${stats.maxWinStreak}</p>
                 <p>Max Loss Streak: ${stats.maxLossStreak}</p>
@@ -239,7 +253,7 @@ function updateCountBoxes() {
     document.getElementById('tie-count-box').innerText = tieCount;
 }
 
-// Dark Moode Toggle
+// Dark Mode Toggle
 document.getElementById('toggle-dark-mode').addEventListener('click', function() {
     document.body.classList.toggle('dark-mode');
 });
