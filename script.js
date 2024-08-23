@@ -222,10 +222,10 @@ function updateStrategyStats() {
     }
 
     // Now, apply the yellow color to the strategy with the highest win rate
-    // and orange color to the strategy with the lowest win rate
+    // and purple color to the strategy with the lowest win rate
     for (const strategy in strategies) {
         const stats = strategies[strategy].getStats();
-        const winRateColor = strategy === highestWinRateStrategy ? 'yellow' : strategy === lowestWinRateStrategy ? 'orange' : 'white';
+        const winRateColor = strategy === highestWinRateStrategy ? 'yellow' : strategy === lowestWinRateStrategy ? 'purple' : 'white';
         const predictionColor = stats.currentWinStreak === Math.max(...Object.values(strategies).map(s => s.getStats().currentWinStreak)) && stats.currentWinStreak > 0 ? 'green' : 'black';
 
         statsHTML += `
