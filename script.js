@@ -48,12 +48,10 @@ class Strategy {
 
         if (this.predict() === result) {
             this.wins--;
-            this.currentWinStreak--;
-            if (this.currentWinStreak < 0) this.currentWinStreak = 0;
+            this.currentWinStreak = Math.max(0, this.currentWinStreak - 1);
         } else {
             this.losses--;
-            this.currentLossStreak--;
-            if (this.currentLossStreak < 0) this.currentLossStreak = 0;
+            this.currentLossStreak = Math.max(0, this.currentLossStreak - 1);
         }
     }
 
@@ -98,7 +96,9 @@ const strategies = {
     'Double Trouble': new Strategy('Double Trouble', ['B', 'B', 'P', 'P', 'B', 'B']),
     'The Gentleman': new Strategy('The Gentleman', ['B', 'P', 'B', 'P', 'P', 'B', 'B', 'P']),
     'Mr. Miyagi': new Strategy('Mr. Miyagi', ['P', 'P', 'P', 'B', 'B', 'P', 'P', 'P']),
-    'Animal Style': new Strategy('Animal Style', ['B', 'B', 'B', 'B', 'P', 'P', 'P', 'P'])
+    'Animal Style': new Strategy('Animal Style', ['B', 'B', 'B', 'B', 'P', 'P', 'P', 'P']),
+    'Karate Chop': new Strategy('Karate Chop', ['B', 'P', 'B', 'P', 'B', 'P', 'B', 'P']),
+    'Snoop Dogg': new Strategy('Snoop Dogg', ['P', 'P', 'B', 'P', 'P', 'B', 'P', 'B', 'B'])
 };
 
 let history = [];
@@ -239,7 +239,7 @@ function updateCountBoxes() {
     document.getElementById('tie-count-box').innerText = tieCount;
 }
 
-// Dark Mode Toggle
+// Dark Moode Toggle
 document.getElementById('toggle-dark-mode').addEventListener('click', function() {
     document.body.classList.toggle('dark-mode');
 });
