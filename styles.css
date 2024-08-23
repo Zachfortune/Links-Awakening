@@ -149,7 +149,7 @@ button[delete] {
     border: 1px solid #555;
 }
 
-/* Mobile-friendly adjustments */
+/* Mobile-friendly adjustmeents */
 @media (max-width: 600px) {
     header h1 {
         font-size: 20px;
