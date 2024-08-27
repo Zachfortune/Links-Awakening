@@ -258,6 +258,40 @@ function updateCountBoxes() {
     document.getElementById('tie-count-box').innerText = tieCount;
 }
 
+// Export to Spreadsheet
+function exportToSpreadsheet() {
+    const wb = XLSX.utils.book_new();
+
+    // Add hand results to the spreadsheet
+    const handResultsData = history.map((result, index) => ({
+        'Hand Number': index + 1,
+        'Result': result
+    }));
+    const handResultsSheet = XLSX.utils.json_to_sheet(handResultsData);
+    XLSX.utils.book_append_sheet(wb, handResultsSheet, 'Hand Results');
+
+    // Add strategy stats to the spreadsheet
+    const strategyStatsData = Object.keys(strategies).map(strategy => {
+        const stats = strategies[strategy].getStats();
+        return {
+            'Strategy': strategy,
+            'Wins': stats.wins,
+            'Losses': stats.losses,
+            'Win Rate (%)': stats.winRate,
+            'Loss Rate (%)': stats.lossRate,
+            'Max Win Streak': stats.maxWinStreak,
+            'Max Loss Streak': stats.maxLossStreak,
+            'Current Win Streak': stats.currentWinStreak,
+            'Current Loss Streak': stats.currentLossStreak
+        };
+    });
+    const strategyStatsSheet = XLSX.utils.json_to_sheet(strategyStatsData);
+    XLSX.utils.book_append_sheet(wb, strategyStatsSheet, 'Strategy Stats');
+
+    // Export the workbook
+    XLSX.writeFile(wb, 'Baccarat_Results_Strategy_Stats.xlsx');
+}
+
 // Dark Mode Toggle
 document.getElementById('toggle-dark-mode').addEventListener('click', function() {
     document.body.classList.toggle('dark-mode');
