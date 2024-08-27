@@ -88,7 +88,7 @@ button[delete] {
 /* Scrollbox for game history */
 .scrollbox {
     width: 100%;
-    max-height: 150px;  /* Fixed height to allow scrolling */
+    max-height: 150px;
     overflow-y: auto;
     border: 1px solid #ddd;
     padding: 10px;
@@ -149,7 +149,7 @@ button[delete] {
     border: 1px solid #555;
 }
 
-/* Mobile-friendly adjustmeents */
+/* Mobile-friendly adjustments */
 @media (max-width: 600px) {
     header h1 {
         font-size: 20px;
