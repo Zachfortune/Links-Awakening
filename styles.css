@@ -85,6 +85,16 @@ button[delete] {
     background-color: #FF00FF;
 }
 
+/* Export to Spreadsheet button color */
+button[export] {
+    background-color: #FFD700; /* Dark Yellow */
+    color: black;
+}
+
+button[export]:hover {
+    background-color: #E0B800; /* Slightly darker yellow on hover */
+}
+
 /* Scrollbox for game history */
 .scrollbox {
     width: 100%;
