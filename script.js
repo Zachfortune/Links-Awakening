@@ -124,6 +124,7 @@ function updateDisplay() {
     updatePredictions();
     updateStrategyStats();
     updateCountBoxes();
+    updateMobileView(); // Ensure mobile view updates in real-time
 }
 
 function updateHistory() {
