@@ -175,8 +175,7 @@ function updateStrategyStats() {
         }
     }
 
-    // Now, apply the yellow color to the strategy with the highest win rate
-    // and purple color to the strategy with the lowest win rate
+    // Apply colors based on win rates
     for (const strategy in strategies) {
         const stats = strategies[strategy].getStats();
         const winRateColor = strategy === highestWinRateStrategy ? 'yellow' : strategy === lowestWinRateStrategy ? 'purple' : 'white';
@@ -205,6 +204,46 @@ function updateCountBoxes() {
     document.getElementById('banker-count-box').innerText = bankerCount;
     document.getElementById('player-count-box').innerText = playerCount;
     document.getElementById('tie-count-box').innerText = tieCount;
+}
+
+function toggleMobileView() {
+    const desktopView = document.getElementById('strategy-stats');
+    const mobileView = document.getElementById('strategy-stats-mobile');
+
+    if (desktopView.style.display === 'none') {
+        desktopView.style.display = 'flex';
+        mobileView.style.display = 'none';
+    } else {
+        desktopView.style.display = 'none';
+        mobileView.style.display = 'block';
+        updateMobileView();
+    }
+}
+
+function updateMobileView() {
+    const strategyStatsMobile = document.getElementById('strategy-stats-mobile');
+    let tableHTML = `<table><thead><tr><th>Strategy</th><th>Wins</th><th>Losses</th><th>Win Rate</th><th>Loss Rate</th><th>Max Win Streak</th><th>Max Loss Streak</th><th>Current Win Streak</th><th>Current Loss Streak</th><th>Next Prediction</th></tr></thead><tbody>`;
+
+    for (const strategy in strategies) {
+        const stats = strategies[strategy].getStats();
+        tableHTML += `
+            <tr>
+                <td>${strategies[strategy].name}</td>
+                <td>${stats.wins}</td>
+                <td>${stats.losses}</td>
+                <td>${stats.winRate}%</td>
+                <td>${stats.lossRate}%</td>
+                <td>${stats.maxWinStreak}</td>
+                <td>${stats.maxLossStreak}</td>
+                <td>${stats.currentWinStreak}</td>
+                <td>${stats.currentLossStreak}</td>
+                <td>${stats.prediction}</td>
+            </tr>
+        `;
+    }
+
+    tableHTML += `</tbody></table>`;
+    strategyStatsMobile.innerHTML = tableHTML;
 }
 
 // Export to Spreadsheet
