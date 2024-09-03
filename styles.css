@@ -159,7 +159,7 @@ button[export]:hover {
     border: 1px solid #555;
 }
 
-/* Mobile-friendly adjustments */
+/* Mobile-friendly adjustmennts */
 @media (max-width: 600px) {
     header h1 {
         font-size: 20px;
