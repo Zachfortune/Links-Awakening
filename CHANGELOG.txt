@@ -1,5 +1,7 @@
 # Changelog for Link's Awakening
 
+For inquires, email twin.zach@gmail.com
+
 ## Version 1.9.2
 - Added a feature to export all hand results along with strategy stats into a spreadsheet file.
 - Implemented centralized recalculation for all strategy statistics to ensure consistency after deleting a hand.
