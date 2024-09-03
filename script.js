@@ -2,6 +2,14 @@ class Strategy {
     constructor(name, sequence) {
         this.name = name;
         this.sequence = sequence;
+        this.resetStats();
+    }
+
+    predict() {
+        return this.sequence[this.position];
+    }
+
+    resetStats() {
         this.position = 0;
         this.wins = 0;
         this.losses = 0;
@@ -9,10 +17,6 @@ class Strategy {
         this.currentLossStreak = 0;
         this.maxWinStreak = 0;
         this.maxLossStreak = 0;
-    }
-
-    predict() {
-        return this.sequence[this.position];
     }
 
     update(result) {
@@ -35,38 +39,6 @@ class Strategy {
             }
             this.position = (this.position + 1) % this.sequence.length;
         }
-    }
-
-    reverseUpdate(result) {
-        if (result === 'T') return;
-
-        if (this.position === 0) {
-            this.position = this.sequence.length - 1;
-        } else {
-            this.position = (this.position - 1 + this.sequence.length) % this.sequence.length;
-        }
-
-        if (this.predict() === result) {
-            this.wins--;
-            this.currentWinStreak = Math.max(0, this.currentWinStreak - 1);
-        } else {
-            this.losses--;
-            this.currentLossStreak = Math.max(0, this.currentLossStreak - 1);
-        }
-    }
-
-    resetStats() {
-        this.position = 0;
-        this.wins = 0;
-        this.losses = 0;
-        this.currentWinStreak = 0;
-        this.currentLossStreak = 0;
-        this.maxWinStreak = 0;
-        this.maxLossStreak = 0;
-    }
-
-    fullReset() {
-        this.resetStats();
     }
 
     getStats() {
@@ -113,56 +85,45 @@ let tieCount = 0;
 
 function recordResult(result) {
     history.push(result);
-    updateCounts(result);
-    updateHistory();
-    updateStrategies(result);
-    updatePredictions();
-    updateStrategyStats();
-    updateCountBoxes();
-
-    // Automatically scroll to the bottom to show the latest hands
-    const handResultsContainer = document.getElementById('hand-results-container');
-    handResultsContainer.scrollTop = handResultsContainer.scrollHeight;
+    recalculateStats();
+    updateDisplay();
 }
 
 function deleteLastHand() {
     if (history.length === 0) return;
 
-    const lastResult = history.pop();
-    reverseUpdateCounts(lastResult);
-    reverseUpdateStrategies(lastResult);
+    history.pop();
+    recalculateStats();
+    updateDisplay();
+}
+
+function recalculateStats() {
+    // Reset counts and strategies
+    playerCount = 0;
+    bankerCount = 0;
+    tieCount = 0;
+
+    for (const strategy in strategies) {
+        strategies[strategy].resetStats();
+    }
+
+    // Recalculate stats from history
+    for (const result of history) {
+        if (result === 'P') playerCount++;
+        if (result === 'B') bankerCount++;
+        if (result === 'T') tieCount++;
+
+        for (const strategy in strategies) {
+            strategies[strategy].update(result);
+        }
+    }
+}
+
+function updateDisplay() {
     updateHistory();
     updatePredictions();
     updateStrategyStats();
     updateCountBoxes();
-
-    if (history.length === 0) {
-        fullResetAllStrategies();
-        playerCount = 0;
-        bankerCount = 0;
-        tieCount = 0;
-        updateStrategyStats();
-        updatePredictions();
-        updateCountBoxes();
-    }
-}
-
-function fullResetAllStrategies() {
-    for (const strategy in strategies) {
-        strategies[strategy].fullReset();
-    }
-}
-
-function updateCounts(result) {
-    if (result === 'P') playerCount++;
-    if (result === 'B') bankerCount++;
-    if (result === 'T') tieCount++;
-}
-
-function reverseUpdateCounts(result) {
-    if (result === 'P') playerCount--;
-    if (result === 'B') bankerCount--;
-    if (result === 'T') tieCount--;
 }
 
 function updateHistory() {
@@ -173,18 +134,6 @@ function updateHistory() {
     history.forEach((result, index) => {
         handResults.innerHTML += `<p>Hand ${index + 1}: ${result}</p>`;
     });
-}
-
-function updateStrategies(result) {
-    for (const strategy in strategies) {
-        strategies[strategy].update(result);
-    }
-}
-
-function reverseUpdateStrategies(result) {
-    for (const strategy in strategies) {
-        strategies[strategy].reverseUpdate(result);
-    }
 }
 
 function updatePredictions() {
