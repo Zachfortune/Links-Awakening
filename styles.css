@@ -60,8 +60,10 @@ button {
     display: block;
 }
 
-button#toggle-dark-mode {
+button#toggle-dark-mode,
+button#mobile-view-toggle {
     background-color: #FFA500;
+    margin-bottom: 10px;
 }
 
 button:hover {
@@ -159,7 +161,30 @@ button[export]:hover {
     border: 1px solid #555;
 }
 
-/* Mobile-friendly adjustmennts */
+/* Mobile-friendly view */
+.mobile-view {
+    display: none; /* Hidden by default */
+    width: 100%;
+    overflow-x: auto;
+}
+
+.mobile-view table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.mobile-view th, .mobile-view td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.mobile-view th {
+    background-color: #444;
+    color: white;
+}
+
+/* Mobile-friendly adjustments */
 @media (max-width: 600px) {
     header h1 {
         font-size: 20px;
