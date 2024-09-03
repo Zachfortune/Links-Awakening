@@ -2,11 +2,12 @@
 
 ## Version 1.9.2
 - Added a feature to export all hand results along with strategy stats into a spreadsheet file.
+- Implemented centralized recalculation for all strategy statistics to ensure consistency after deleting a hand.
 
 ## Version 1.9.1
 - Added two new strategies:
-  1. **Karate Chop**
-  2. **Snoop Dogg**
+  1. **Karate Chop**: 
+  2. **Snoop Dogg**: 
 
 ## Version 1.9
 - Updated strategy statistics to display the next prediction in green for the strategy with the highest current win streak of 1 or more.
