@@ -8,7 +8,7 @@ body {
 }
 
 header {
-    background-color: #FFA500; /* Changed from purple to orange */
+    background-color: #FFA500; /* Orange for the header */
     color: #fff;
     padding: 10px;
     text-align: center;
@@ -62,6 +62,16 @@ button {
 
 button#toggle-dark-mode {
     background-color: #FFA500; /* Orange for the dark mode toggle */
+}
+
+button#toggle-mobile-view {
+    background-color: #008CBA; /* Blue for mobile view toggle */
+    color: white;
+}
+
+button#export-button {
+    background-color: #FFD700; /* Dark yellow for export button */
+    color: black;
 }
 
 button:hover {
@@ -133,6 +143,7 @@ button[delete] {
     flex: 1;
     min-width: 200px;
     color: white; /* Ensures text is readable */
+    margin-bottom: 10px; /* Add margin between strategy boxes */
 }
 
 #strategy-stats h3 {
@@ -145,6 +156,7 @@ button[delete] {
     margin: 5px 0;
     font-size: 16px;
     color: #ddd; /* Light gray text */
+    border-bottom: 1px solid #555; /* Separator lines in mobile view */
 }
 
 .dark-mode #strategy-stats div {
