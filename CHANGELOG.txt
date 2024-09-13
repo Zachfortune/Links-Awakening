@@ -1,30 +1,25 @@
 # Changelog for Link's Awakening
 
-## Version 1.9.3
-- Added a feature to export all hand results along with strategy stats into a spreadsheet file.
-- Implemented centralized recalculation for all strategy statistics to ensure consistency after deleting a hand.
-- Added "Mobile View Button" to switch the strategy statistics view to a spreadsheet-like format optimized for mobile view.
-- Introduced a new strategy: "Grand Theft Auto. This strategy has a chance of winning 83.74% within 3 bets. 
+## Version 1.9.3.1
+- Added export to spreadsheet feature for hand results and strategy statistics.
+- Fixed logic for "Grand Theft Auto" strategy to ensure it tracks wins and losses correctly and follows the proper prediction sequence after a "WAIT" state.
+- Improved handling of prediction color changes for strategies based on current loss streaks.
+- Enhanced mobile view toggle to switch between regular and spreadsheet-like views for better usability.
+- Updated button color for export feature to dark yellow.
 
 ## Version 1.9.1
-- Added two new strategies:
-  1. **Karate Chop**: 
-  2. **Snoop Dogg**: 
+- Added new strategies: Karate Chop and Snoop Dogg.
+- Updated strategy statistics to track and display correctly after each input and deletion.
 
 ## Version 1.9
-- Updated strategy statistics to display the next prediction in green for the strategy with the highest current win streak of 1 or more.
-- Added real-time display of predictions within each strategy's statistics box.
+- Implemented mobile view button for optimized strategy statistics view on mobile devices.
+- Enhanced handling of predictions and strategy statistics to update correctly with each user input.
+- Fixed issue with strategy statistics not resetting correctly after deleting all hands.
 
 ## Version 1.8
-- Implemented a scrollbox for game history, allowing free scrolling while keeping the height fixed.
-- Added prediction display in real-time within each strategy's statistics box.
-
-## Version 1.7
-- Improved UI for dark mode compatibility.
-- Added visual indicators for current loss streaks in the prediction section.
-
-## Version 1.6.6
-- Fixed bug where text would not change to dark red after a 4 or greater current loss streak.
+- Made hand results scrollable within a fixed-size container for easier navigation.
+- Improved UI for game history and strategy statistics display.
+- Updated to support both dark mode and regular mode.
 
 ## Version 1.6.5
 - Added new strategy: Animal Style.
