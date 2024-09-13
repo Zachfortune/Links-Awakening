@@ -8,7 +8,7 @@ body {
 }
 
 header {
-    background-color: #FFA500;
+    background-color: #FFA500; /* Changed from purple to orange */
     color: #fff;
     padding: 10px;
     text-align: center;
@@ -36,17 +36,17 @@ main {
 }
 
 #player-count-box {
-    border-color: #007BFF;
+    border-color: #007BFF; /* Blue border */
     color: #007BFF;
 }
 
 #banker-count-box {
-    border-color: #DC3545;
+    border-color: #DC3545; /* Red border */
     color: #DC3545;
 }
 
 #tie-count-box {
-    border-color: #28A745;
+    border-color: #28A745; /* Green border */
     color: #28A745;
 }
 
@@ -60,10 +60,8 @@ button {
     display: block;
 }
 
-button#toggle-dark-mode,
-button#mobile-view-toggle {
-    background-color: #FFA500;
-    margin-bottom: 10px;
+button#toggle-dark-mode {
+    background-color: #FFA500; /* Orange for the dark mode toggle */
 }
 
 button:hover {
@@ -72,35 +70,24 @@ button:hover {
 
 /* Specific button colors */
 button[player] {
-    background-color: #007BFF;
+    background-color: #007BFF; /* Blue for Player */
 }
 
 button[banker] {
-    background-color: #DC3545;
+    background-color: #DC3545; /* Red for Banker */
 }
 
 button[tie] {
-    background-color: #28A745;
+    background-color: #28A745; /* Green for Tie */
 }
 
 button[delete] {
-    background-color: #FF00FF;
+    background-color: #FF00FF; /* Magenta for Delete Last Hand */
 }
 
-/* Export to Spreadsheet button color */
-button[export] {
-    background-color: #FFD700; /* Dark Yellow */
-    color: black;
-}
-
-button[export]:hover {
-    background-color: #E0B800; /* Slightly darker yellow on hover */
-}
-
-/* Scrollbox for game history */
 .scrollbox {
     width: 100%;
-    max-height: 150px;
+    max-height: 150px;  /* Fixed height to enable scrolling */
     overflow-y: auto;
     border: 1px solid #ddd;
     padding: 10px;
@@ -119,12 +106,16 @@ button[export]:hover {
 }
 
 .dark-mode header {
-    background-color: #FF8C00;
+    background-color: #FF8C00; /* Darker Orange for header in dark mode */
 }
 
 .dark-mode button {
     background-color: #bb86fc;
     color: #000;
+}
+
+.dark-mode table, .dark-mode th, .dark-mode td {
+    border-color: #555;
 }
 
 /* Style for the strategy stats section */
@@ -136,55 +127,32 @@ button[export]:hover {
 }
 
 #strategy-stats div {
-    background-color: #444;
+    background-color: #444; /* Dark gray background */
     border: 1px solid #ddd;
     padding: 10px;
     flex: 1;
     min-width: 200px;
-    color: white;
+    color: white; /* Ensures text is readable */
 }
 
 #strategy-stats h3 {
     margin-top: 0;
     font-size: 18px;
-    color: #ffa500;
+    color: #ffa500; /* Orange for the headings */
 }
 
 #strategy-stats p {
     margin: 5px 0;
     font-size: 16px;
-    color: #ddd;
+    color: #ddd; /* Light gray text */
 }
 
 .dark-mode #strategy-stats div {
-    background-color: #222;
+    background-color: #222; /* Even darker gray in dark mode */
     border: 1px solid #555;
 }
 
-/* Mobile-friendly view */
-.mobile-view {
-    display: none; /* Hidden by default */
-    width: 100%;
-    overflow-x: auto;
-}
-
-.mobile-view table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.mobile-view th, .mobile-view td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
-}
-
-.mobile-view th {
-    background-color: #444;
-    color: white;
-}
-
-/* Mobile-friendly addjustments */
+/* Mobile-friendly adjustments */
 @media (max-width: 600px) {
     header h1 {
         font-size: 20px;
