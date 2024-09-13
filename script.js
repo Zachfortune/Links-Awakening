@@ -33,6 +33,7 @@ class Strategy {
         if (this.isConditional && !this.isReady) {
             if (result === 'P') {
                 this.isReady = true; // Start the strategy when a single 'P' is input
+                this.position = 0; // Start from the beginning of the sequence
             }
             return;
         }
