@@ -25,7 +25,7 @@ class Strategy {
     }
 
     update(result) {
-        if (result === 'T') return;
+        if (result === 'T') return; // Ignore ties for strategy calculations
 
         if (this.isConditional) {
             if (!this.isReady) {
@@ -36,6 +36,7 @@ class Strategy {
             }
         }
 
+        // If the prediction matches the result, it's a win
         if (this.predict() === result) {
             this.wins++;
             this.currentWinStreak++;
@@ -44,7 +45,7 @@ class Strategy {
                 this.maxWinStreak = this.currentWinStreak;
             }
             this.resetStats(); // Reset after a win
-        } else {
+        } else if (this.isReady) { // Only count losses when the strategy is ready to bet
             this.losses++;
             this.currentLossStreak++;
             this.currentWinStreak = 0;
