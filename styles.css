@@ -184,7 +184,7 @@ button[export]:hover {
     color: white;
 }
 
-/* Mobile-friendly adjustments */
+/* Mobile-friendly addjustments */
 @media (max-width: 600px) {
     header h1 {
         font-size: 20px;
