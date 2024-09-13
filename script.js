@@ -3,6 +3,7 @@ class Strategy {
         this.name = name;
         this.sequence = sequence;
         this.isConditional = isConditional; // Whether the strategy has a conditional start
+        this.isReady = !isConditional; // Default to ready unless conditional
         this.resetStats();
     }
 
@@ -21,31 +22,35 @@ class Strategy {
         this.currentLossStreak = 0;
         this.maxWinStreak = 0;
         this.maxLossStreak = 0;
-        this.isReady = false; // Used for conditional strategies like "Grand Theft Auto"
+        if (!this.isConditional) {
+            this.isReady = true; // Non-conditional strategies should always be ready
+        }
     }
 
     update(result) {
         if (result === 'T') return; // Ignore ties for strategy calculations
 
-        if (this.isConditional) {
-            if (!this.isReady) {
-                if (result === 'P') {
-                    this.isReady = true; // Start the strategy when a single 'P' is input
-                }
-                return;
+        if (this.isConditional && !this.isReady) {
+            if (result === 'P') {
+                this.isReady = true; // Start the strategy when a single 'P' is input
             }
+            return;
         }
 
-        // If the prediction matches the result, it's a win
         if (this.isReady && this.predict() === result) {
+            // Correctly track wins
             this.wins++;
             this.currentWinStreak++;
             this.currentLossStreak = 0;
             if (this.currentWinStreak > this.maxWinStreak) {
                 this.maxWinStreak = this.currentWinStreak;
             }
-            this.resetToWait(); // Reset to wait state after a win
-        } else if (this.isReady) { // Only count losses when the strategy is ready to bet
+            this.position = 0; // Reset sequence position after a win
+            if (this.isConditional) {
+                this.resetToWait(); // Only reset to "WAIT" state if the strategy is conditional
+            }
+        } else if (this.isReady) {
+            // Correctly track losses
             this.losses++;
             this.currentLossStreak++;
             this.currentWinStreak = 0;
@@ -56,7 +61,7 @@ class Strategy {
 
             // Reset to wait state if all bets in the sequence are lost
             if (this.position === 0 && this.isConditional) {
-                this.resetToWait(); // Wait for another 'P' after losing all three bets
+                this.resetToWait();
             }
         }
     }
@@ -307,7 +312,7 @@ function exportToSpreadsheet() {
     XLSX.writeFile(wb, 'Baccarat_Results_Strategy_Stats.xlsx');
 }
 
-// Darkk Mode Toggle
+// Dark Mode Toggle
 document.getElementById('toggle-dark-mode').addEventListener('click', function() {
     document.body.classList.toggle('dark-mode');
 });
