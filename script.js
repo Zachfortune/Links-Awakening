@@ -1,11 +1,15 @@
 class Strategy {
-    constructor(name, sequence) {
+    constructor(name, sequence, isConditional = false) {
         this.name = name;
         this.sequence = sequence;
+        this.isConditional = isConditional; // Whether the strategy has a conditional start
         this.resetStats();
     }
 
     predict() {
+        if (this.isConditional && !this.isReady) {
+            return "WAIT"; // Show "WAIT" if the strategy is not ready
+        }
         return this.sequence[this.position];
     }
 
@@ -17,10 +21,20 @@ class Strategy {
         this.currentLossStreak = 0;
         this.maxWinStreak = 0;
         this.maxLossStreak = 0;
+        this.isReady = false; // Used for conditional strategies like "Grand Theft Auto"
     }
 
     update(result) {
         if (result === 'T') return;
+
+        if (this.isConditional) {
+            if (!this.isReady) {
+                if (result === 'P') {
+                    this.isReady = true; // Start the strategy when a single 'P' is input
+                }
+                return;
+            }
+        }
 
         if (this.predict() === result) {
             this.wins++;
@@ -29,7 +43,7 @@ class Strategy {
             if (this.currentWinStreak > this.maxWinStreak) {
                 this.maxWinStreak = this.currentWinStreak;
             }
-            this.position = 0;
+            this.resetStats(); // Reset after a win
         } else {
             this.losses++;
             this.currentLossStreak++;
@@ -38,6 +52,11 @@ class Strategy {
                 this.maxLossStreak = this.currentLossStreak;
             }
             this.position = (this.position + 1) % this.sequence.length;
+
+            // Reset to wait state if all bets in the sequence are lost
+            if (this.position === 0 && this.isConditional) {
+                this.isReady = false; // Wait for another 'P' after losing all three bets
+            }
         }
     }
 
@@ -75,7 +94,8 @@ const strategies = {
     'The Trend Follower': new Strategy('The Trend Follower', ['P', 'P', 'P', 'B', 'B']),
     'The Reversal': new Strategy('The Reversal', ['B', 'P', 'P', 'B']),
     'The Pincer': new Strategy('The Pincer', ['B', 'P', 'P', 'B', 'B', 'P']),
-    'The Edge Case': new Strategy('The Edge Case', ['P', 'B', 'P', 'P', 'B', 'P', 'B'])
+    'The Edge Case': new Strategy('The Edge Case', ['P', 'B', 'P', 'P', 'B', 'P', 'B']),
+    'Grand Theft Auto': new Strategy('Grand Theft Auto', ['B', 'B', 'P'], true) // Conditional strategy
 };
 
 let history = [];
