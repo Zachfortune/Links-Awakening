@@ -37,14 +37,14 @@ class Strategy {
         }
 
         // If the prediction matches the result, it's a win
-        if (this.predict() === result) {
+        if (this.isReady && this.predict() === result) {
             this.wins++;
             this.currentWinStreak++;
             this.currentLossStreak = 0;
             if (this.currentWinStreak > this.maxWinStreak) {
                 this.maxWinStreak = this.currentWinStreak;
             }
-            this.resetStats(); // Reset after a win
+            this.resetToWait(); // Reset to wait state after a win
         } else if (this.isReady) { // Only count losses when the strategy is ready to bet
             this.losses++;
             this.currentLossStreak++;
@@ -56,9 +56,14 @@ class Strategy {
 
             // Reset to wait state if all bets in the sequence are lost
             if (this.position === 0 && this.isConditional) {
-                this.isReady = false; // Wait for another 'P' after losing all three bets
+                this.resetToWait(); // Wait for another 'P' after losing all three bets
             }
         }
+    }
+
+    resetToWait() {
+        this.position = 0;
+        this.isReady = false; // Reset to wait for a player input after a win or full sequence loss
     }
 
     getStats() {
@@ -302,7 +307,7 @@ function exportToSpreadsheet() {
     XLSX.writeFile(wb, 'Baccarat_Results_Strategy_Stats.xlsx');
 }
 
-// Dark Mode Toggle
+// Darkk Mode Toggle
 document.getElementById('toggle-dark-mode').addEventListener('click', function() {
     document.body.classList.toggle('dark-mode');
 });
