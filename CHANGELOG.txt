@@ -1,6 +1,7 @@
 # Changelog for Link's Awakening
 
-## Version 1.9.3
+## Version 1.9.3.2
+- Fixed a bug that incorrectly made GTA in a "Ready" state instead of a valid "Wait" state.
 - Added a feature to export all hand results along with strategy stats into a spreadsheet file.
 - Implemented centralized recalculation for all strategy statistics to ensure consistency after deleting a hand.
 - Added "Mobile View Button" to switch the strategy statistics view to a spreadsheet-like format optimized for mobile view.
