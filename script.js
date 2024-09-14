@@ -24,6 +24,15 @@ class Strategy {
         this.maxLossStreak = 0;
         if (!this.isConditional) {
             this.isReady = true; // Non-conditional strategies should always be ready
+        } else {
+            this.isReady = false; // Conditional strategies start in "WAIT"
+        }
+    }
+
+    handleFirstPlayerInput() {
+        if (this.isConditional && !this.isReady) {
+            this.isReady = true; // Start the strategy when a single 'P' is input
+            this.position = 0;   // Start from the first position of the sequence
         }
     }
 
@@ -31,15 +40,11 @@ class Strategy {
         if (result === 'T') return; // Ignore ties for strategy calculations
 
         // Handle the waiting state for conditional strategies
-        if (this.isConditional && !this.isReady) {
-            if (result === 'P') {
-                this.isReady = true; // Start the strategy when a single 'P' is input
-                this.position = 0;   // Ensure position is reset to the start of the sequence
-            }
+        if (result === 'P' && this.isConditional && !this.isReady) {
+            this.handleFirstPlayerInput(); // Handle the first 'P' input separately
             return;
         }
 
-        // If strategy is ready and the prediction matches the result
         if (this.isReady && this.predict() === result) {
             this.wins++;
             this.currentWinStreak++;
@@ -316,7 +321,7 @@ function exportToSpreadsheet() {
     XLSX.writeFile(wb, 'Baccarat_Results_Strategy_Stats.xlsx');
 }
 
-// Dark Modee Toggle
+// Dark Mode Toggle
 document.getElementById('toggle-dark-mode').addEventListener('click', function() {
     document.body.classList.toggle('dark-mode');
 });
