@@ -1,0 +1,210 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    transition: background-color 0.3s, color 0.3s;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #FFA500;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+}
+
+main {
+    padding: 20px;
+}
+
+#count-boxes {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.count-box {
+    width: 80px;
+    height: 50px;
+    border: 2px solid;
+    margin: 0 10px;
+    font-size: 24px;
+    text-align: center;
+    line-height: 50px;
+    background-color: transparent;
+}
+
+#player-count-box {
+    border-color: #007BFF;
+    color: #007BFF;
+}
+
+#banker-count-box {
+    border-color: #DC3545;
+    color: #DC3545;
+}
+
+#tie-count-box {
+    border-color: #28A745;
+    color: #28A745;
+}
+
+button {
+    padding: 10px 20px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin: 5px 0;
+    width: 100%;
+    display: block;
+}
+
+button#toggle-dark-mode,
+button#mobile-view-toggle {
+    background-color: #FFA500;
+    margin-bottom: 10px;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+/* Specific button colors */
+button[player] {
+    background-color: #007BFF;
+}
+
+button[banker] {
+    background-color: #DC3545;
+}
+
+button[tie] {
+    background-color: #28A745;
+}
+
+button[delete] {
+    background-color: #FF00FF;
+}
+
+/* Export to Spreadsheet button color */
+button[export] {
+    background-color: #FFD700; /* Dark Yellow */
+    color: black;
+}
+
+button[export]:hover {
+    background-color: #E0B800; /* Slightly darker yellow on hover */
+}
+
+/* Scrollbox for game history */
+.scrollbox {
+    width: 100%;
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+#hand-results {
+    font-size: 18px;
+    line-height: 1.5;
+    white-space: nowrap;
+}
+
+.dark-mode {
+    background-color: #333;
+    color: #f4f4f4;
+}
+
+.dark-mode header {
+    background-color: #FF8C00;
+}
+
+.dark-mode button {
+    background-color: #bb86fc;
+    color: #000;
+}
+
+/* Style for the strategy stats section */
+#strategy-stats {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+#strategy-stats div {
+    background-color: #444;
+    border: 1px solid #ddd;
+    padding: 10px;
+    flex: 1;
+    min-width: 200px;
+    color: white;
+}
+
+#strategy-stats h3 {
+    margin-top: 0;
+    font-size: 18px;
+    color: #ffa500;
+}
+
+#strategy-stats p {
+    margin: 5px 0;
+    font-size: 16px;
+    color: #ddd;
+}
+
+.dark-mode #strategy-stats div {
+    background-color: #222;
+    border: 1px solid #555;
+}
+
+/* Mobile-friendly view */
+.mobile-view {
+    display: none; /* Hidden by default */
+    width: 100%;
+    overflow-x: auto;
+}
+
+.mobile-view table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.mobile-view th, .mobile-view td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.mobile-view th {
+    background-color: #444;
+    color: white;
+}
+
+/* Mobile-friendly addjustments */
+@media (max-width: 600px) {
+    header h1 {
+        font-size: 20px;
+    }
+
+    main {
+        padding: 10px;
+    }
+
+    .count-box {
+        width: 100px;
+        font-size: 20px;
+    }
+
+    button {
+        padding: 8px 10px;
+        font-size: 14px;
+    }
+
+    #strategy-stats div {
+        min-width: 100%;
+    }
+}
