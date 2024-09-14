@@ -30,15 +30,17 @@ class Strategy {
     update(result) {
         if (result === 'T') return; // Ignore ties for strategy calculations
 
+        // Handle the waiting state for conditional strategies
         if (this.isConditional && !this.isReady) {
             if (result === 'P') {
                 this.isReady = true; // Start the strategy when a single 'P' is input
+                this.position = 0;   // Ensure position is reset to the start of the sequence
             }
             return;
         }
 
+        // If strategy is ready and the prediction matches the result
         if (this.isReady && this.predict() === result) {
-            // Correctly track wins
             this.wins++;
             this.currentWinStreak++;
             this.currentLossStreak = 0;
@@ -50,16 +52,17 @@ class Strategy {
                 this.resetToWait(); // Only reset to "WAIT" state if the strategy is conditional
             }
         } else if (this.isReady) {
-            // Correctly track losses
+            // If prediction does not match, handle losses
             this.losses++;
             this.currentLossStreak++;
             this.currentWinStreak = 0;
             if (this.currentLossStreak > this.maxLossStreak) {
                 this.maxLossStreak = this.currentLossStreak;
             }
+
             this.position = (this.position + 1) % this.sequence.length;
 
-            // Reset to wait state if all bets in the sequence are lost
+            // If all bets in the sequence are lost, reset to wait state
             if (this.position === 0 && this.isConditional) {
                 this.resetToWait();
             }
