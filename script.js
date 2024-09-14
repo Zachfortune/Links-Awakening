@@ -34,7 +34,7 @@ class Strategy {
         if (this.isConditional && !this.isReady) {
             if (result === 'P') {
                 this.isReady = true; // Start the strategy when a single 'P' is input
-                this.position = 0;   // Ensure position is reset to the start of the sequence
+                this.position = 0;   // Start from the first position of the sequence
             }
             return;
         }
