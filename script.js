@@ -34,7 +34,7 @@ class Strategy {
         if (this.isConditional && !this.isReady) {
             if (result === 'P') {
                 this.isReady = true; // Start the strategy when a single 'P' is input
-                this.position = 0;   // Start from the first position of the sequence
+                this.position = 0;   // Ensure position is reset to the start of the sequence
             }
             return;
         }
@@ -316,7 +316,7 @@ function exportToSpreadsheet() {
     XLSX.writeFile(wb, 'Baccarat_Results_Strategy_Stats.xlsx');
 }
 
-// Dark Mode Toggle
+// Dark Modee Toggle
 document.getElementById('toggle-dark-mode').addEventListener('click', function() {
     document.body.classList.toggle('dark-mode');
 });
