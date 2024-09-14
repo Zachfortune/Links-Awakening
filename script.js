@@ -60,6 +60,7 @@ class Strategy {
                 this.maxLossStreak = this.currentLossStreak;
             }
 
+            // Update the position in the sequence
             this.position = (this.position + 1) % this.sequence.length;
 
             // If all bets in the sequence are lost, reset to wait state
