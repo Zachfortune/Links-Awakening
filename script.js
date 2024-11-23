@@ -22,25 +22,57 @@ class Strategy {
         this.currentLossStreak = 0;
         this.maxWinStreak = 0;
         this.maxLossStreak = 0;
-        this.isReady = !this.isConditional;
+        if (!this.isConditional) {
+            this.isReady = true;
+        } else {
+            this.isReady = false;
+        }
+    }
+
+    handleFirstPlayerInput() {
+        if (this.isConditional && !this.isReady) {
+            this.isReady = true;
+            this.position = 0;
+        }
     }
 
     update(result) {
-        if (result === "T") return;
+        if (result === 'T') return;
 
-        if (this.predict() === result) {
+        if (result === 'P' && this.isConditional && !this.isReady) {
+            this.handleFirstPlayerInput();
+            return;
+        }
+
+        if (this.isReady && this.predict() === result) {
             this.wins++;
             this.currentWinStreak++;
             this.currentLossStreak = 0;
-            this.maxWinStreak = Math.max(this.maxWinStreak, this.currentWinStreak);
-            this.position = 0; // Reset sequence after a win
-        } else {
+            if (this.currentWinStreak > this.maxWinStreak) {
+                this.maxWinStreak = this.currentWinStreak;
+            }
+            this.position = 0;
+            if (this.isConditional) {
+                this.resetToWait();
+            }
+        } else if (this.isReady) {
             this.losses++;
             this.currentLossStreak++;
             this.currentWinStreak = 0;
-            this.maxLossStreak = Math.max(this.maxLossStreak, this.currentLossStreak);
+            if (this.currentLossStreak > this.maxLossStreak) {
+                this.maxLossStreak = this.currentLossStreak;
+            }
             this.position = (this.position + 1) % this.sequence.length;
+
+            if (this.position === 0 && this.isConditional) {
+                this.resetToWait();
+            }
         }
+    }
+
+    resetToWait() {
+        this.position = 0;
+        this.isReady = false;
     }
 
     getStats() {
@@ -62,152 +94,113 @@ class Strategy {
     }
 }
 
-class GrandTheftAuto extends Strategy {
+const strategies = {
+    'The Cake': new Strategy('The Cake', ['B', 'B', 'P', 'B', 'B', 'P', 'P', 'B']),
+    'ZachFortune': new Strategy('ZachFortune', ['B', 'B', 'P', 'P', 'B', 'P', 'B']),
+    'Mr. Toad': new Strategy('Mr. Toad', ['P', 'B', 'P', 'B', 'P', 'B', 'P', 'B']),
+    'The Marcos': new Strategy('The Marcos', ['P', 'B', 'P', 'P', 'B', 'B']),
+    'Double Trouble': new Strategy('Double Trouble', ['B', 'B', 'P', 'P', 'B', 'B']),
+    'The Gentleman': new Strategy('The Gentleman', ['B', 'P', 'B', 'P', 'P', 'B', 'B', 'P']),
+    'Mr. Miyagi': new Strategy('Mr. Miyagi', ['P', 'P', 'P', 'B', 'B', 'P', 'P', 'P']),
+    'Animal Style': new Strategy('Animal Style', ['B', 'B', 'B', 'B', 'P', 'P', 'P', 'P']),
+    'Karate Chop': new Strategy('Karate Chop', ['B', 'P', 'B', 'P', 'B', 'P', 'B', 'P']),
+    'Snoop Dogg': new Strategy('Snoop Dogg', ['P', 'P', 'B', 'P', 'P', 'B', 'P', 'B', 'B']),
+    'The Safe Bet': new Strategy('The Safe Bet', ['P', 'P', 'B', 'B']),
+    'The Trend Follower': new Strategy('The Trend Follower', ['P', 'P', 'P', 'B', 'B']),
+    'The Reversal': new Strategy('The Reversal', ['B', 'P', 'P', 'B']),
+    'The Pincer': new Strategy('The Pincer', ['B', 'P', 'P', 'B', 'B', 'P']),
+    'The Edge Case': new Strategy('The Edge Case', ['P', 'B', 'P', 'P', 'B', 'P', 'B']),
+    'Grand Theft Auto': new Strategy('Grand Theft Auto', ['B', 'B', 'P'], true),
+};
+
+class SlicedBreadStrategy extends Strategy {
     constructor() {
-        super("Grand Theft Auto", ["B", "B", "P"], true);
-    }
-
-    update(result) {
-        if (result === "T") return;
-
-        if (!this.isReady) {
-            if (result === "P") {
-                this.isReady = true;
-                this.position = 0;
-            }
-            return;
-        }
-
-        if (this.predict() === result) {
-            this.wins++;
-            this.resetToWait();
-        } else {
-            this.losses++;
-            this.position = (this.position + 1) % this.sequence.length;
-            if (this.position === 0) {
-                this.resetToWait();
-            }
-        }
-    }
-
-    resetToWait() {
-        this.isReady = false;
-    }
-}
-
-class SlicedBread extends Strategy {
-    constructor() {
-        super("Sliced Bread 🥖", [], true);
+        super('Sliced Bread 🥖', [], true);
         this.phase = 1;
-        this.waitingHands = [];
-        this.predictions = [];
-        this.sequence = [];
+        this.predictionSequence = [];
+        this.waitCount = 0;
+        this.previousResults = [];
     }
 
     predict() {
-        if (!this.isReady) return "WAIT";
-
         if (this.phase === 1) {
-            const lastHand = this.waitingHands[this.waitingHands.length - 1];
-            if (this.predictions.length < 3) {
-                return lastHand;
-            } else {
-                return lastHand === "P" ? "B" : "P";
+            if (this.previousResults.length < 3) {
+                return "WAIT";
             }
+            if (this.waitCount > 0) {
+                this.waitCount--;
+                return "WAIT";
+            }
+            if (this.predictionSequence.length > 0) {
+                return this.predictionSequence.shift();
+            }
+            return this.previousResults[this.previousResults.length - 1];
         } else if (this.phase === 2) {
-            return this.sequence[this.position];
+            if (this.previousResults.length < 2) {
+                return "WAIT";
+            }
+            if (this.predictionSequence.length > 0) {
+                return this.predictionSequence.shift();
+            }
+            const [secondLast, last] = this.previousResults.slice(-2);
+            if (secondLast === 'P' && last === 'P') {
+                this.predictionSequence = ['P', 'B', 'B', 'B'];
+            } else if (secondLast === 'B' && last === 'B') {
+                this.predictionSequence = ['B', 'P', 'P', 'P'];
+            } else if (secondLast === 'P' && last === 'B') {
+                this.predictionSequence = ['P', 'P', 'B', 'P'];
+            } else if (secondLast === 'B' && last === 'P') {
+                this.predictionSequence = ['B', 'B', 'P', 'B'];
+            }
+            return this.predictionSequence.shift();
         }
-        return "WAIT";
     }
 
     update(result) {
-        if (result === "T") return;
-
-        if (!this.isReady) {
-            this.waitingHands.push(result);
-            if (this.phase === 1 && this.waitingHands.length >= 3) {
-                this.isReady = true;
-            } else if (this.phase === 2 && this.waitingHands.length >= 2) {
-                const sequenceMap = {
-                    "PP": ["P", "B", "B", "B"],
-                    "BB": ["B", "P", "P", "P"],
-                    "PB": ["P", "P", "B", "P"],
-                    "BP": ["B", "B", "P", "B"]
-                };
-                const key = this.waitingHands.slice(-2).join("");
-                this.sequence = sequenceMap[key] || [];
-                this.position = 0;
-                this.isReady = true;
-            }
-            return;
+        if (result === 'T') return;
+        this.previousResults.push(result);
+        if (this.previousResults.length > 50) {
+            this.previousResults.shift();
         }
 
         if (this.phase === 1) {
-            this.waitingHands.push(result);
-            if (this.waitingHands.length > 3) this.waitingHands.shift();
-
-            if (this.predict() === result) {
-                this.predictions = [];
-                this.waitingHands = [result];
-                this.isReady = false;
+            const prediction = this.predict();
+            if (prediction === result) {
+                this.phase = 1;
+                this.waitCount = 1;
+                this.predictionSequence = [];
             } else {
-                this.predictions.push(result);
-                if (this.predictions.length >= 4) {
+                this.predictionSequence.push(
+                    this.predictionSequence.length < 3
+                        ? result
+                        : result === 'P'
+                        ? 'B'
+                        : 'P'
+                );
+                if (this.predictionSequence.length > 4) {
                     this.phase = 2;
-                    this.waitingHands = [];
-                    this.isReady = false;
+                    this.predictionSequence = [];
                 }
             }
         } else if (this.phase === 2) {
-            this.waitingHands.push(result);
-            if (this.waitingHands.length > 2) this.waitingHands.shift();
-
-            if (this.predict() === result) {
+            const prediction = this.predict();
+            if (prediction === result) {
                 this.phase = 1;
-                this.waitingHands = [result];
-                this.predictions = [];
-                this.isReady = false;
-            } else {
-                this.position = (this.position + 1) % this.sequence.length;
-                if (this.position === 0) {
-                    this.phase = 1;
-                    this.waitingHands = [];
-                    this.predictions = [];
-                    this.isReady = false;
-                }
+                this.predictionSequence = [];
             }
         }
     }
-
-    resetStats() {
-        super.resetStats();
-        this.phase = 1;
-        this.waitingHands = [];
-        this.predictions = [];
-        this.sequence = [];
-    }
 }
 
-const strategies = {
-    "The Gentleman": new Strategy("The Gentleman", ["B", "P", "B", "P"]),
-    "Mr. Miyagi": new Strategy("Mr. Miyagi", ["P", "P", "P", "B", "B", "P", "P", "P"]),
-    "Animal Style": new Strategy("Animal Style", ["B", "B", "B", "B", "P", "P", "P", "P"]),
-    "Karate Chop": new Strategy("Karate Chop", ["B", "P", "B", "P", "B", "P", "B", "P"]),
-    "Snoop Dogg": new Strategy("Snoop Dogg", ["P", "P", "B", "P", "P", "B", "P", "B", "B"]),
-    "The Safe Bet": new Strategy("The Safe Bet", ["P", "P", "B", "B"]),
-    "The Trend Follower": new Strategy("The Trend Follower", ["P", "P", "P", "B", "B"]),
-    "The Reversal": new Strategy("The Reversal", ["B", "P", "P", "B"]),
-    "The Pincer": new Strategy("The Pincer", ["B", "P", "P", "B", "B", "P"]),
-    "The Edge Case": new Strategy("The Edge Case", ["P", "B", "P", "P", "B", "P", "B"]),
-    "Grand Theft Auto": new GrandTheftAuto(),
-    "Sliced Bread 🥖": new SlicedBread()
-};
+strategies['Sliced Bread 🥖'] = new SlicedBreadStrategy();
 
 let history = [];
 let playerCount = 0;
 let bankerCount = 0;
 let tieCount = 0;
 
+// Functions to record results, delete hands, recalculate stats, update displays, export, and toggle mobile view
+// (continued as full code...)
 function recordResult(result) {
     history.push(result);
     recalculateStats();
@@ -223,6 +216,7 @@ function deleteLastHand() {
 }
 
 function recalculateStats() {
+    // Reset counts and strategies
     playerCount = 0;
     bankerCount = 0;
     tieCount = 0;
@@ -231,10 +225,11 @@ function recalculateStats() {
         strategies[strategy].resetStats();
     }
 
+    // Recalculate stats from history
     for (const result of history) {
-        if (result === "P") playerCount++;
-        if (result === "B") bankerCount++;
-        if (result === "T") tieCount++;
+        if (result === 'P') playerCount++;
+        if (result === 'B') bankerCount++;
+        if (result === 'T') tieCount++;
 
         for (const strategy in strategies) {
             strategies[strategy].update(result);
@@ -247,24 +242,26 @@ function updateDisplay() {
     updatePredictions();
     updateStrategyStats();
     updateCountBoxes();
+    updateMobileView(); // Ensure mobile view updates in real-time
 }
 
 function updateHistory() {
-    const handResults = document.getElementById("hand-results");
-    handResults.innerHTML = "";
+    const handResults = document.getElementById('hand-results');
+    handResults.innerHTML = '';
 
+    // Display all hands
     history.forEach((result, index) => {
         handResults.innerHTML += `<p>Hand ${index + 1}: ${result}</p>`;
     });
 }
 
 function updatePredictions() {
-    const predictionResults = document.getElementById("prediction-results");
-    let predictionsHTML = "";
+    const predictionResults = document.getElementById('prediction-results');
+    let predictionsHTML = '';
 
     for (const strategy in strategies) {
         const stats = strategies[strategy].getStats();
-        const strategyColor = stats.currentLossStreak >= 4 ? "darkred" : "black";
+        const strategyColor = stats.currentLossStreak >= 4 ? 'darkred' : 'black';
 
         predictionsHTML += `<p><strong style="color: ${strategyColor}; font-weight: bold;">${strategies[strategy].name}:</strong> ${strategies[strategy].predict()}</p>`;
     }
@@ -273,23 +270,48 @@ function updatePredictions() {
 }
 
 function updateStrategyStats() {
-    const strategyStats = document.getElementById("strategy-stats");
-    let statsHTML = "";
+    const strategyStats = document.getElementById('strategy-stats');
+    let statsHTML = '';
 
+    let highestWinRate = 0;
+    let lowestWinRate = 100;
+    let highestWinRateStrategy = null;
+    let lowestWinRateStrategy = null;
+
+    // First, find the highest and lowest win rates
     for (const strategy in strategies) {
         const stats = strategies[strategy].getStats();
+        const winRate = parseFloat(stats.winRate);
+
+        if (winRate > highestWinRate) {
+            highestWinRate = winRate;
+            highestWinRateStrategy = strategy;
+        }
+
+        if (winRate < lowestWinRate) {
+            lowestWinRate = winRate;
+            lowestWinRateStrategy = strategy;
+        }
+    }
+
+    // Apply colors based on win rates
+    for (const strategy in strategies) {
+        const stats = strategies[strategy].getStats();
+        const winRateColor = strategy === highestWinRateStrategy ? 'yellow' : strategy === lowestWinRateStrategy ? 'orange' : 'white';
+        const predictionColor = stats.currentWinStreak === Math.max(...Object.values(strategies).map(s => s.getStats().currentWinStreak)) && stats.currentWinStreak > 0 ? 'green' : 'black';
+
         statsHTML += `
             <div>
-                <h3>${strategies[strategy].name}</h3>
+                <h3 style="color: ${winRateColor};">${strategies[strategy].name}</h3>
                 <p>Wins: ${stats.wins}</p>
                 <p>Losses: ${stats.losses}</p>
-                <p>Win Rate: ${stats.winRate}%</p>
+                <p style="color: ${winRateColor};">Win Rate: ${stats.winRate}%</p>
                 <p>Loss Rate: ${stats.lossRate}%</p>
                 <p>Max Win Streak: ${stats.maxWinStreak}</p>
                 <p>Max Loss Streak: ${stats.maxLossStreak}</p>
                 <p>Current Win Streak: ${stats.currentWinStreak}</p>
                 <p>Current Loss Streak: ${stats.currentLossStreak}</p>
-                <p>Next Prediction: ${stats.prediction}</p>
+                <p><strong style="color: ${predictionColor};">Next Prediction:</strong> ${stats.prediction}</p>
             </div>
         `;
     }
@@ -298,27 +320,27 @@ function updateStrategyStats() {
 }
 
 function updateCountBoxes() {
-    document.getElementById("banker-count-box").innerText = bankerCount;
-    document.getElementById("player-count-box").innerText = playerCount;
-    document.getElementById("tie-count-box").innerText = tieCount;
+    document.getElementById('player-count-box').innerText = playerCount;
+    document.getElementById('banker-count-box').innerText = bankerCount;
+    document.getElementById('tie-count-box').innerText = tieCount;
 }
 
 function toggleMobileView() {
-    const desktopView = document.getElementById("strategy-stats");
-    const mobileView = document.getElementById("strategy-stats-mobile");
+    const desktopView = document.getElementById('strategy-stats');
+    const mobileView = document.getElementById('strategy-stats-mobile');
 
-    if (desktopView.style.display === "none") {
-        desktopView.style.display = "flex";
-        mobileView.style.display = "none";
+    if (desktopView.style.display === 'none') {
+        desktopView.style.display = 'flex';
+        mobileView.style.display = 'none';
     } else {
-        desktopView.style.display = "none";
-        mobileView.style.display = "block";
+        desktopView.style.display = 'none';
+        mobileView.style.display = 'block';
         updateMobileView();
     }
 }
 
 function updateMobileView() {
-    const strategyStatsMobile = document.getElementById("strategy-stats-mobile");
+    const strategyStatsMobile = document.getElementById('strategy-stats-mobile');
     let tableHTML = `<table><thead><tr><th>Strategy</th><th>Wins</th><th>Losses</th><th>Win Rate</th><th>Loss Rate</th><th>Max Win Streak</th><th>Max Loss Streak</th><th>Current Win Streak</th><th>Current Loss Streak</th><th>Next Prediction</th></tr></thead><tbody>`;
 
     for (const strategy in strategies) {
@@ -343,38 +365,41 @@ function updateMobileView() {
     strategyStatsMobile.innerHTML = tableHTML;
 }
 
+// Export to Spreadsheet
 function exportToSpreadsheet() {
     const wb = XLSX.utils.book_new();
 
+    // Add hand results to the spreadsheet
     const handResultsData = history.map((result, index) => ({
-        "Hand Number": index + 1,
-        Result: result
+        'Hand Number': index + 1,
+        'Result': result
     }));
     const handResultsSheet = XLSX.utils.json_to_sheet(handResultsData);
-    XLSX.utils.book_append_sheet(wb, handResultsSheet, "Hand Results");
+    XLSX.utils.book_append_sheet(wb, handResultsSheet, 'Hand Results');
 
+    // Add strategy stats to the spreadsheet
     const strategyStatsData = Object.keys(strategies).map(strategy => {
         const stats = strategies[strategy].getStats();
         return {
-            Strategy: strategy,
-            Wins: stats.wins,
-            Losses: stats.losses,
-            "Win Rate (%)": stats.winRate,
-            "Loss Rate (%)": stats.lossRate,
-            "Max Win Streak": stats.maxWinStreak,
-            "Max Loss Streak": stats.maxLossStreak,
-            "Current Win Streak": stats.currentWinStreak,
-            "Current Loss Streak": stats.currentLossStreak
+            'Strategy': strategy,
+            'Wins': stats.wins,
+            'Losses': stats.losses,
+            'Win Rate (%)': stats.winRate,
+            'Loss Rate (%)': stats.lossRate,
+            'Max Win Streak': stats.maxWinStreak,
+            'Max Loss Streak': stats.maxLossStreak,
+            'Current Win Streak': stats.currentWinStreak,
+            'Current Loss Streak': stats.currentLossStreak
         };
     });
     const strategyStatsSheet = XLSX.utils.json_to_sheet(strategyStatsData);
-    XLSX.utils.book_append_sheet(wb, strategyStatsSheet, "Strategy Stats");
+    XLSX.utils.book_append_sheet(wb, strategyStatsSheet, 'Strategy Stats');
 
-    XLSX.writeFile(wb, "Baccarat_Results_Strategy_Stats.xlsx");
+    // Export the workbook
+    XLSX.writeFile(wb, 'Baccarat_Results_Strategy_Stats.xlsx');
 }
 
-document.getElementById("toggle-dark-mode").addEventListener("click", function () {
-    document.body.classList.toggle("dark-mode");
+// Dark Mode Toggle
+document.getElementById('toggle-dark-mode').addEventListener('click', function() {
+    document.body.classList.toggle('dark-mode');
 });
-
-document.getElementById("toggle-mobile-view").addEventListener("click", toggleMobileView);
