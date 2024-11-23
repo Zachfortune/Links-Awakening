@@ -113,7 +113,7 @@ const strategies = {
     'Grand Theft Auto': new Strategy('Grand Theft Auto', ['B', 'B', 'P'], true),
 };
 
-// Fixed "Sliced Bread 🥖" Strategy
+// Updated "Sliced Bread 🥖" Strategy
 class SlicedBreadStrategy extends Strategy {
     constructor() {
         super('Sliced Bread 🥖', [], true);
@@ -165,23 +165,25 @@ class SlicedBreadStrategy extends Strategy {
 
         const prediction = this.predict();
         if (this.phase === 1) {
-            if (prediction === result) {
-                this.wins++;
-                this.currentWinStreak++;
-                this.currentLossStreak = 0;
-                this.maxWinStreak = Math.max(this.maxWinStreak, this.currentWinStreak);
-                this.waitCount = 1;
-            } else if (prediction !== "WAIT") {
-                this.losses++;
-                this.currentLossStreak++;
-                this.currentWinStreak = 0;
-                this.maxLossStreak = Math.max(this.maxLossStreak, this.currentLossStreak);
+            if (this.previousResults.length >= 3) {
+                if (prediction === result) {
+                    this.wins++;
+                    this.currentWinStreak++;
+                    this.currentLossStreak = 0;
+                    this.maxWinStreak = Math.max(this.maxWinStreak, this.currentWinStreak);
+                    this.waitCount = 1;
+                } else if (prediction !== "WAIT") {
+                    this.losses++;
+                    this.currentLossStreak++;
+                    this.currentWinStreak = 0;
+                    this.maxLossStreak = Math.max(this.maxLossStreak, this.currentLossStreak);
 
-                if (this.predictionSequence.length < 3) {
-                    this.predictionSequence.push(result);
-                } else {
-                    this.predictionSequence = [result === 'P' ? 'B' : 'P'];
-                    this.phase = 2;
+                    if (this.predictionSequence.length < 3) {
+                        this.predictionSequence.push(result);
+                    } else {
+                        this.predictionSequence = [result === 'P' ? 'B' : 'P'];
+                        this.phase = 2;
+                    }
                 }
             }
         } else if (this.phase === 2) {
@@ -209,7 +211,7 @@ class SlicedBreadStrategy extends Strategy {
 
 strategies['Sliced Bread 🥖'] = new SlicedBreadStrategy();
 
-// Add the rest of the functions for recording results, exporting, and toggling views
+// Remaining functions: recordResult, updateDisplay, and export logic
 let history = [];
 let playerCount = 0;
 let bankerCount = 0;
@@ -256,7 +258,7 @@ function updateDisplay() {
     updatePredictions();
     updateStrategyStats();
     updateCountBoxes();
-    updateMobileView();
+    updateMobileView(); // Ensure mobile view updates in real-time
 }
 
 function updateHistory() {
