@@ -3,60 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Link's Awakening 2.0 Created by @ZachFortune</title>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self'; style-src 'self' 'unsafe-inline';">
+    <title>Baccarat App</title>
+    <!-- Load external stylesheet -->
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script> <!-- SheetJS Library -->
+    <!-- Safe SheetJS build -->
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 </head>
 <body>
-    <header>
-        <h1>
-            <img src="https://cdn2.steamgriddb.com/icon/7e19999864bb17b5cf10e68e3c7e6276/32/64x64.png" alt="Baccarat Icon" style="vertical-align: middle;">
-            Link's Awakening 2.0 Created by @ZachFortune
-        </h1>
-        <button id="toggle-dark-mode">Toggle Dark Mode</button>
-    </header>
+    <div id="app">
+        <!-- Header Section -->
+        <header>
+            <h1>Baccarat Strategy Tracker</h1>
+        </header>
 
-    <main>
-        <section>
-            <h2>Changelog</h2>
-            <p><a href="CHANGELOG.txt" target="_blank">View Changelog</a></p>
-        </section>
-
-        <section id="count-boxes">
-            <div class="count-box" id="player-count-box">0</div>
-            <div class="count-box" id="banker-count-box">0</div>
-            <div class="count-box" id="tie-count-box">0</div>
-        </section>
-
-        <section>
-            <h2>Record Result</h2>
-            <button player onclick="recordResult('P')">Player</button>
-            <button banker onclick="recordResult('B')">Banker</button>
-            <button tie onclick="recordResult('T')">Tie</button>
-            <button delete onclick="deleteLastHand()">Delete Last Hand</button>
-            <button export onclick="exportToSpreadsheet()">Export to Spreadsheet</button> <!-- Export Button -->
-        </section>
-
-        <section>
-            <h2>Predictions</h2>
-            <div id="prediction-results"></div>
-        </section>
-
-        <section>
+        <!-- Hand Results Section -->
+        <section id="results-section">
             <h2>Game History</h2>
-            <div id="hand-results-container" class="scrollbox">
-                <div id="hand-results"></div>
+            <div id="hand-results" class="scrollable-box">
+                <!-- Game history will populate here -->
             </div>
         </section>
 
-        <section>
-            <h2>Strategy Statistics</h2>
-            <button id="mobile-view-toggle" onclick="toggleMobileView()">Toggle Mobile View</button> <!-- Mobile View Toggle Button -->
-            <div id="strategy-stats" class="desktop-view"></div>
-            <div id="strategy-stats-mobile" class="mobile-view" style="display: none;"></div>
+        <!-- Prediction Results Section -->
+        <section id="predictions-section">
+            <h2>Predictions</h2>
+            <div id="prediction-results">
+                <!-- Predictions will populate here -->
+            </div>
         </section>
-    </main>
 
+        <!-- Strategy Stats Section -->
+        <section id="stats-section">
+            <h2>Strategy Stats</h2>
+            <div id="strategy-stats" class="stats-container">
+                <!-- Strategy stats will populate here -->
+            </div>
+            <div id="strategy-stats-mobile" class="stats-mobile" style="display: none;">
+                <!-- Mobile view for strategy stats -->
+            </div>
+        </section>
+
+        <!-- Count Boxes -->
+        <section id="count-section">
+            <h2>Count Totals</h2>
+            <div id="count-container">
+                <div id="player-count-box">0</div>
+                <div id="banker-count-box">0</div>
+                <div id="tie-count-box">0</div>
+            </div>
+        </section>
+
+        <!-- Controls -->
+        <section id="controls-section">
+            <h2>Controls</h2>
+            <button onclick="recordResult('P')">Record Player Win</button>
+            <button onclick="recordResult('B')">Record Banker Win</button>
+            <button onclick="recordResult('T')">Record Tie</button>
+            <button onclick="deleteLastHand()">Delete Last Hand</button>
+            <button onclick="exportToSpreadsheet()">Export to Spreadsheet</button>
+            <button id="toggle-dark-mode">Toggle Dark Mode</button>
+            <button onclick="toggleMobileView()">Toggle Mobile View</button>
+        </section>
+    </div>
+
+    <!-- Load external JavaScript -->
     <script src="script.js"></script>
 </body>
 </html>
