@@ -113,6 +113,7 @@ const strategies = {
     'Grand Theft Auto': new Strategy('Grand Theft Auto', ['B', 'B', 'P'], true),
 };
 
+// Fixed "Sliced Bread 🥖" Strategy
 class SlicedBreadStrategy extends Strategy {
     constructor() {
         super('Sliced Bread 🥖', [], true);
@@ -128,11 +129,10 @@ class SlicedBreadStrategy extends Strategy {
                 return "WAIT";
             }
             if (this.waitCount > 0) {
-                this.waitCount--;
                 return "WAIT";
             }
             if (this.predictionSequence.length > 0) {
-                return this.predictionSequence.shift();
+                return this.predictionSequence[0];
             }
             return this.previousResults[this.previousResults.length - 1];
         } else if (this.phase === 2) {
@@ -140,7 +140,7 @@ class SlicedBreadStrategy extends Strategy {
                 return "WAIT";
             }
             if (this.predictionSequence.length > 0) {
-                return this.predictionSequence.shift();
+                return this.predictionSequence[0];
             }
             const [secondLast, last] = this.previousResults.slice(-2);
             if (secondLast === 'P' && last === 'P') {
@@ -152,41 +152,56 @@ class SlicedBreadStrategy extends Strategy {
             } else if (secondLast === 'B' && last === 'P') {
                 this.predictionSequence = ['B', 'B', 'P', 'B'];
             }
-            return this.predictionSequence.shift();
+            return this.predictionSequence[0];
         }
     }
 
     update(result) {
         if (result === 'T') return;
+
         this.previousResults.push(result);
         if (this.previousResults.length > 50) {
             this.previousResults.shift();
         }
 
+        const prediction = this.predict();
         if (this.phase === 1) {
-            const prediction = this.predict();
             if (prediction === result) {
-                this.phase = 1;
-                this.waitCount = 1;
+                this.wins++;
+                this.currentWinStreak++;
+                this.currentLossStreak = 0;
+                this.maxWinStreak = Math.max(this.maxWinStreak, this.currentWinStreak);
                 this.predictionSequence = [];
-            } else {
-                this.predictionSequence.push(
-                    this.predictionSequence.length < 3
-                        ? result
-                        : result === 'P'
-                        ? 'B'
-                        : 'P'
-                );
-                if (this.predictionSequence.length > 4) {
+                this.waitCount = 1;
+            } else if (prediction !== "WAIT") {
+                this.losses++;
+                this.currentLossStreak++;
+                this.currentWinStreak = 0;
+                this.maxLossStreak = Math.max(this.maxLossStreak, this.currentLossStreak);
+                if (this.predictionSequence.length < 3) {
+                    this.predictionSequence.push(result);
+                } else {
+                    this.predictionSequence = [result === 'P' ? 'B' : 'P'];
                     this.phase = 2;
-                    this.predictionSequence = [];
                 }
             }
         } else if (this.phase === 2) {
-            const prediction = this.predict();
             if (prediction === result) {
+                this.wins++;
+                this.currentWinStreak++;
+                this.currentLossStreak = 0;
+                this.maxWinStreak = Math.max(this.maxWinStreak, this.currentWinStreak);
                 this.phase = 1;
                 this.predictionSequence = [];
+            } else if (prediction !== "WAIT") {
+                this.losses++;
+                this.currentLossStreak++;
+                this.currentWinStreak = 0;
+                this.maxLossStreak = Math.max(this.maxLossStreak, this.currentLossStreak);
+                this.predictionSequence.shift();
+                if (this.predictionSequence.length === 0) {
+                    this.phase = 1;
+                }
             }
         }
     }
@@ -194,13 +209,12 @@ class SlicedBreadStrategy extends Strategy {
 
 strategies['Sliced Bread 🥖'] = new SlicedBreadStrategy();
 
+// Remaining functions: recordResult, deleteLastHand, recalculateStats, updateDisplay, toggleMobileView, and export functionality
 let history = [];
 let playerCount = 0;
 let bankerCount = 0;
 let tieCount = 0;
 
-// Functions to record results, delete hands, recalculate stats, update displays, export, and toggle mobile view
-// (continued as full code...)
 function recordResult(result) {
     history.push(result);
     recalculateStats();
@@ -365,7 +379,6 @@ function updateMobileView() {
     strategyStatsMobile.innerHTML = tableHTML;
 }
 
-// Export to Spreadsheet
 function exportToSpreadsheet() {
     const wb = XLSX.utils.book_new();
 
@@ -399,7 +412,6 @@ function exportToSpreadsheet() {
     XLSX.writeFile(wb, 'Baccarat_Results_Strategy_Stats.xlsx');
 }
 
-// Dark Mode Toggle
 document.getElementById('toggle-dark-mode').addEventListener('click', function() {
     document.body.classList.toggle('dark-mode');
 });
