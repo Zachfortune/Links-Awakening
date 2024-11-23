@@ -89,7 +89,7 @@ button[delete] {
 
 /* Export to Spreadsheet button color */
 button[export] {
-    background-color: #FFD700; /* Dark Yellow */
+    background-color: #FFD700; /* Gold color */
     color: black;
 }
 
@@ -184,7 +184,12 @@ button[export]:hover {
     color: white;
 }
 
-/* Mobile-friendly addjustments */
+/* Gold color for Sliced Bread 🥖 */
+#strategy-stats div h3:contains('Sliced Bread 🥖') {
+    color: #FFD700;
+}
+
+/* Mobile-friendly adjustments */
 @media (max-width: 600px) {
     header h1 {
         font-size: 20px;
