@@ -29,21 +29,8 @@ class Strategy {
         }
     }
 
-    handleFirstPlayerInput() {
-        if (this.isConditional && !this.isReady) {
-            this.isReady = true; // Start the strategy when a single 'P' is input
-            this.position = 0;   // Start from the first position of the sequence
-        }
-    }
-
     update(result) {
-        if (result === 'T') return; // Ignore ties for strategy calculations
-
-        // Handle the waiting state for conditional strategies
-        if (this.isConditional && !this.isReady) {
-            this.handleFirstPlayerInput();
-            return;
-        }
+        if (result === "T") return; // Ignore ties
 
         if (this.isReady && this.predict() === result) {
             this.wins++;
@@ -85,16 +72,16 @@ class Strategy {
 
 class SlicedBread extends Strategy {
     constructor() {
-        super("Sliced Bread 🥖", [], true); // Use isConditional = true
+        super("Sliced Bread 🥖", [], true); // Conditional start with WAIT state
         this.phase = 1; // Start in Phase 1
         this.waitingHands = [];
         this.predictions = [];
-        this.sequence = []; // Sequence dynamically determined in Phase 2
+        this.sequence = [];
     }
 
     predict() {
         if (!this.isReady) {
-            return "WAIT"; // Wait until the strategy is ready
+            return "WAIT"; // Still in the WAIT state
         }
 
         if (this.phase === 1) {
@@ -105,15 +92,7 @@ class SlicedBread extends Strategy {
                 return lastHand === "P" ? "B" : "P"; // Opposite for the fourth prediction
             }
         } else if (this.phase === 2) {
-            const sequenceMap = {
-                "PP": ["P", "B", "B", "B"],
-                "BB": ["B", "P", "P", "P"],
-                "PB": ["P", "P", "B", "P"],
-                "BP": ["B", "B", "P", "B"],
-            };
-            const key = this.waitingHands.slice(-2).join("");
-            this.sequence = sequenceMap[key] || [];
-            return this.sequence[this.position];
+            return this.sequence[this.position]; // Predict based on the current sequence
         }
         return "WAIT";
     }
@@ -121,24 +100,39 @@ class SlicedBread extends Strategy {
     update(result) {
         if (result === "T") return; // Ignore ties
 
-        // Handle waiting state
+        // Handle WAIT state
         if (!this.isReady) {
             this.waitingHands.push(result);
+
             if (this.phase === 1 && this.waitingHands.length >= 3) {
-                this.isReady = true; // Transition out of WAIT after 3 hands
+                this.isReady = true; // Ready after observing 3 hands in Phase 1
             } else if (this.phase === 2 && this.waitingHands.length >= 2) {
-                this.isReady = true; // Transition out of WAIT after 2 hands
+                const sequenceMap = {
+                    "PP": ["P", "B", "B", "B"],
+                    "BB": ["B", "P", "P", "P"],
+                    "PB": ["P", "P", "B", "P"],
+                    "BP": ["B", "B", "P", "B"],
+                };
+                const key = this.waitingHands.slice(-2).join("");
+                this.sequence = sequenceMap[key] || [];
+                this.position = 0; // Reset sequence position
+                this.isReady = true; // Ready after observing 2 hands in Phase 2
             }
             return;
         }
 
-        // Phase 1 logic
+        // Phase 1 Logic
         if (this.phase === 1) {
+            this.waitingHands.push(result); // Always track the most recent input
+            if (this.waitingHands.length > 3) {
+                this.waitingHands.shift(); // Maintain sliding window of 3
+            }
+
             if (this.predict() === result) {
                 // Correct prediction
                 this.predictions = [];
                 this.waitingHands = [result];
-                this.isReady = false; // Wait one hand before predicting again
+                this.isReady = false; // Wait for 1 hand before predicting again
             } else {
                 this.predictions.push(result);
                 if (this.predictions.length >= 4) {
@@ -150,11 +144,16 @@ class SlicedBread extends Strategy {
             }
         }
 
-        // Phase 2 logic
+        // Phase 2 Logic
         else if (this.phase === 2) {
+            this.waitingHands.push(result); // Always track the most recent input
+            if (this.waitingHands.length > 2) {
+                this.waitingHands.shift(); // Maintain sliding window of 2
+            }
+
             if (this.predict() === result) {
                 // Win in Phase 2
-                this.phase = 1; // Reset to Phase 1
+                this.phase = 1;
                 this.waitingHands = [result];
                 this.predictions = [];
                 this.isReady = false; // Wait for 3 hands in Phase 1
