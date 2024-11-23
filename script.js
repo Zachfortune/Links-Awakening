@@ -129,10 +129,8 @@ class SlicedBreadStrategy extends Strategy {
                 return "WAIT";
             }
             if (this.waitCount > 0) {
+                this.waitCount--;
                 return "WAIT";
-            }
-            if (this.predictionSequence.length > 0) {
-                return this.predictionSequence[0];
             }
             return this.previousResults[this.previousResults.length - 1];
         } else if (this.phase === 2) {
@@ -142,6 +140,7 @@ class SlicedBreadStrategy extends Strategy {
             if (this.predictionSequence.length > 0) {
                 return this.predictionSequence[0];
             }
+
             const [secondLast, last] = this.previousResults.slice(-2);
             if (secondLast === 'P' && last === 'P') {
                 this.predictionSequence = ['P', 'B', 'B', 'B'];
@@ -171,13 +170,13 @@ class SlicedBreadStrategy extends Strategy {
                 this.currentWinStreak++;
                 this.currentLossStreak = 0;
                 this.maxWinStreak = Math.max(this.maxWinStreak, this.currentWinStreak);
-                this.predictionSequence = [];
                 this.waitCount = 1;
             } else if (prediction !== "WAIT") {
                 this.losses++;
                 this.currentLossStreak++;
                 this.currentWinStreak = 0;
                 this.maxLossStreak = Math.max(this.maxLossStreak, this.currentLossStreak);
+
                 if (this.predictionSequence.length < 3) {
                     this.predictionSequence.push(result);
                 } else {
@@ -199,6 +198,7 @@ class SlicedBreadStrategy extends Strategy {
                 this.currentWinStreak = 0;
                 this.maxLossStreak = Math.max(this.maxLossStreak, this.currentLossStreak);
                 this.predictionSequence.shift();
+
                 if (this.predictionSequence.length === 0) {
                     this.phase = 1;
                 }
@@ -209,7 +209,7 @@ class SlicedBreadStrategy extends Strategy {
 
 strategies['Sliced Bread 🥖'] = new SlicedBreadStrategy();
 
-// Remaining functions: recordResult, deleteLastHand, recalculateStats, updateDisplay, toggleMobileView, and export functionality
+// Add the rest of the functions for recording results, exporting, and toggling views
 let history = [];
 let playerCount = 0;
 let bankerCount = 0;
@@ -256,14 +256,13 @@ function updateDisplay() {
     updatePredictions();
     updateStrategyStats();
     updateCountBoxes();
-    updateMobileView(); // Ensure mobile view updates in real-time
+    updateMobileView();
 }
 
 function updateHistory() {
     const handResults = document.getElementById('hand-results');
     handResults.innerHTML = '';
 
-    // Display all hands
     history.forEach((result, index) => {
         handResults.innerHTML += `<p>Hand ${index + 1}: ${result}</p>`;
     });
@@ -292,7 +291,6 @@ function updateStrategyStats() {
     let highestWinRateStrategy = null;
     let lowestWinRateStrategy = null;
 
-    // First, find the highest and lowest win rates
     for (const strategy in strategies) {
         const stats = strategies[strategy].getStats();
         const winRate = parseFloat(stats.winRate);
@@ -308,7 +306,6 @@ function updateStrategyStats() {
         }
     }
 
-    // Apply colors based on win rates
     for (const strategy in strategies) {
         const stats = strategies[strategy].getStats();
         const winRateColor = strategy === highestWinRateStrategy ? 'yellow' : strategy === lowestWinRateStrategy ? 'orange' : 'white';
@@ -382,7 +379,6 @@ function updateMobileView() {
 function exportToSpreadsheet() {
     const wb = XLSX.utils.book_new();
 
-    // Add hand results to the spreadsheet
     const handResultsData = history.map((result, index) => ({
         'Hand Number': index + 1,
         'Result': result
@@ -390,7 +386,6 @@ function exportToSpreadsheet() {
     const handResultsSheet = XLSX.utils.json_to_sheet(handResultsData);
     XLSX.utils.book_append_sheet(wb, handResultsSheet, 'Hand Results');
 
-    // Add strategy stats to the spreadsheet
     const strategyStatsData = Object.keys(strategies).map(strategy => {
         const stats = strategies[strategy].getStats();
         return {
@@ -408,7 +403,6 @@ function exportToSpreadsheet() {
     const strategyStatsSheet = XLSX.utils.json_to_sheet(strategyStatsData);
     XLSX.utils.book_append_sheet(wb, strategyStatsSheet, 'Strategy Stats');
 
-    // Export the workbook
     XLSX.writeFile(wb, 'Baccarat_Results_Strategy_Stats.xlsx');
 }
 
