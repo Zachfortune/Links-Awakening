@@ -102,9 +102,10 @@ class Strategy {
 class SlicedBread extends Strategy {
     constructor() {
         super("Sliced Bread 🥖", []);
-        this.phase = 1;
+        this.phase = 1; // Start in Phase 1
         this.waitingHands = [];
         this.predictions = [];
+        this.sequence = []; // Sequence dynamically determined in Phase 2
     }
 
     predict() {
@@ -121,7 +122,7 @@ class SlicedBread extends Strategy {
             }
         } else if (this.phase === 2) {
             if (this.waitingHands.length < 2) {
-                return "WAIT"; // Wait for 2 hands
+                return "WAIT"; // Wait for 2 hands in Phase 2
             }
 
             const sequenceMap = {
@@ -138,30 +139,37 @@ class SlicedBread extends Strategy {
     }
 
     update(result) {
-        if (result === "T") return;
+        if (result === "T") return; // Ignore ties
 
         this.waitingHands.push(result);
-        if (this.waitingHands.length > 3 && this.phase === 1) this.waitingHands.shift();
-
         if (this.phase === 1) {
+            if (this.waitingHands.length > 3) this.waitingHands.shift(); // Maintain sliding window of 3
+
             if (this.predict() === result) {
-                this.predictions = [];
-                this.waitingHands = [result];
+                // Correct prediction in Phase 1
+                this.predictions = []; // Reset predictions
+                this.waitingHands = [result]; // Reset state to wait for next hand
             } else {
                 this.predictions.push(result);
                 if (this.predictions.length >= 4) {
-                    this.phase = 2;
-                    this.waitingHands = [];
+                    // All 4 predictions lost
+                    this.phase = 2; // Transition to Phase 2
+                    this.waitingHands = []; // Reset for Phase 2
                 }
             }
         } else if (this.phase === 2) {
+            if (this.waitingHands.length > 2) this.waitingHands.shift(); // Maintain sliding window of 2
+
             if (this.predict() === result) {
-                this.phase = 1;
+                // Win in Phase 2
+                this.phase = 1; // Reset to Phase 1
                 this.waitingHands = [result];
                 this.predictions = [];
             } else {
+                // Update sequence position
                 this.position = (this.position + 1) % this.sequence.length;
                 if (this.position === 0) {
+                    // Sequence exhausted, reset to Phase 1
                     this.phase = 1;
                     this.waitingHands = [];
                     this.predictions = [];
