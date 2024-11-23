@@ -99,13 +99,80 @@ class Strategy {
     }
 }
 
+class SlicedBread extends Strategy {
+    constructor() {
+        super("Sliced Bread 🥖", []);
+        this.phase = 1;
+        this.waitingHands = [];
+        this.predictions = [];
+    }
+
+    predict() {
+        if (this.phase === 1) {
+            if (this.waitingHands.length < 3) {
+                return "WAIT"; // Wait for 3 initial hands
+            }
+
+            const lastHand = this.waitingHands[this.waitingHands.length - 1];
+            if (this.predictions.length < 3) {
+                return lastHand; // Predict the last outcome
+            } else {
+                return lastHand === "P" ? "B" : "P"; // Opposite for fourth prediction
+            }
+        } else if (this.phase === 2) {
+            if (this.waitingHands.length < 2) {
+                return "WAIT"; // Wait for 2 hands
+            }
+
+            const sequenceMap = {
+                "PP": ["P", "B", "B", "B"],
+                "BB": ["B", "P", "P", "P"],
+                "PB": ["P", "P", "B", "P"],
+                "BP": ["B", "B", "P", "B"],
+            };
+            const key = this.waitingHands.slice(-2).join("");
+            this.sequence = sequenceMap[key] || [];
+            return this.sequence[this.position];
+        }
+        return "WAIT";
+    }
+
+    update(result) {
+        if (result === "T") return;
+
+        this.waitingHands.push(result);
+        if (this.waitingHands.length > 3 && this.phase === 1) this.waitingHands.shift();
+
+        if (this.phase === 1) {
+            if (this.predict() === result) {
+                this.predictions = [];
+                this.waitingHands = [result];
+            } else {
+                this.predictions.push(result);
+                if (this.predictions.length >= 4) {
+                    this.phase = 2;
+                    this.waitingHands = [];
+                }
+            }
+        } else if (this.phase === 2) {
+            if (this.predict() === result) {
+                this.phase = 1;
+                this.waitingHands = [result];
+                this.predictions = [];
+            } else {
+                this.position = (this.position + 1) % this.sequence.length;
+                if (this.position === 0) {
+                    this.phase = 1;
+                    this.waitingHands = [];
+                    this.predictions = [];
+                }
+            }
+        }
+    }
+}
+
 const strategies = {
-    'The Cake': new Strategy('The Cake', ['B', 'B', 'P', 'B', 'B', 'P', 'P', 'B']),
-    'ZachFortune': new Strategy('ZachFortune', ['B', 'B', 'P', 'P', 'B', 'P', 'B']),
-    'Mr. Toad': new Strategy('Mr. Toad', ['P', 'B', 'P', 'B', 'P', 'B', 'P', 'B']),
-    'The Marcos': new Strategy('The Marcos', ['P', 'B', 'P', 'P', 'B', 'B']),
-    'Double Trouble': new Strategy('Double Trouble', ['B', 'B', 'P', 'P', 'B', 'B']),
-    'The Gentleman': new Strategy('The Gentleman', ['B', 'P', 'B', 'P', 'P', 'B', 'B', 'P']),
+    'The Gentleman': new Strategy('The Gentleman', ['B', 'P', 'B', 'P']),
     'Mr. Miyagi': new Strategy('Mr. Miyagi', ['P', 'P', 'P', 'B', 'B', 'P', 'P', 'P']),
     'Animal Style': new Strategy('Animal Style', ['B', 'B', 'B', 'B', 'P', 'P', 'P', 'P']),
     'Karate Chop': new Strategy('Karate Chop', ['B', 'P', 'B', 'P', 'B', 'P', 'B', 'P']),
@@ -115,7 +182,8 @@ const strategies = {
     'The Reversal': new Strategy('The Reversal', ['B', 'P', 'P', 'B']),
     'The Pincer': new Strategy('The Pincer', ['B', 'P', 'P', 'B', 'B', 'P']),
     'The Edge Case': new Strategy('The Edge Case', ['P', 'B', 'P', 'P', 'B', 'P', 'B']),
-    'Grand Theft Auto': new Strategy('Grand Theft Auto', ['B', 'B', 'P'], true) // Conditional strategy
+    'Grand Theft Auto': new Strategy('Grand Theft Auto', ['B', 'B', 'P'], true), // Conditional strategy
+    'Sliced Bread 🥖': new SlicedBread()
 };
 
 let history = [];
@@ -138,7 +206,6 @@ function deleteLastHand() {
 }
 
 function recalculateStats() {
-    // Reset counts and strategies
     playerCount = 0;
     bankerCount = 0;
     tieCount = 0;
@@ -147,7 +214,6 @@ function recalculateStats() {
         strategies[strategy].resetStats();
     }
 
-    // Recalculate stats from history
     for (const result of history) {
         if (result === 'P') playerCount++;
         if (result === 'B') bankerCount++;
@@ -164,14 +230,13 @@ function updateDisplay() {
     updatePredictions();
     updateStrategyStats();
     updateCountBoxes();
-    updateMobileView(); // Ensure mobile view updates in real-time
+    updateMobileView();
 }
 
 function updateHistory() {
     const handResults = document.getElementById('hand-results');
     handResults.innerHTML = '';
 
-    // Display all hands
     history.forEach((result, index) => {
         handResults.innerHTML += `<p>Hand ${index + 1}: ${result}</p>`;
     });
@@ -200,7 +265,6 @@ function updateStrategyStats() {
     let highestWinRateStrategy = null;
     let lowestWinRateStrategy = null;
 
-    // First, find the highest and lowest win rates
     for (const strategy in strategies) {
         const stats = strategies[strategy].getStats();
         const winRate = parseFloat(stats.winRate);
@@ -216,7 +280,6 @@ function updateStrategyStats() {
         }
     }
 
-    // Apply colors based on win rates
     for (const strategy in strategies) {
         const stats = strategies[strategy].getStats();
         const winRateColor = strategy === highestWinRateStrategy ? 'yellow' : strategy === lowestWinRateStrategy ? 'purple' : 'white';
@@ -287,11 +350,9 @@ function updateMobileView() {
     strategyStatsMobile.innerHTML = tableHTML;
 }
 
-// Export to Spreadsheet
 function exportToSpreadsheet() {
     const wb = XLSX.utils.book_new();
 
-    // Add hand results to the spreadsheet
     const handResultsData = history.map((result, index) => ({
         'Hand Number': index + 1,
         'Result': result
@@ -299,7 +360,6 @@ function exportToSpreadsheet() {
     const handResultsSheet = XLSX.utils.json_to_sheet(handResultsData);
     XLSX.utils.book_append_sheet(wb, handResultsSheet, 'Hand Results');
 
-    // Add strategy stats to the spreadsheet
     const strategyStatsData = Object.keys(strategies).map(strategy => {
         const stats = strategies[strategy].getStats();
         return {
@@ -317,11 +377,9 @@ function exportToSpreadsheet() {
     const strategyStatsSheet = XLSX.utils.json_to_sheet(strategyStatsData);
     XLSX.utils.book_append_sheet(wb, strategyStatsSheet, 'Strategy Stats');
 
-    // Export the workbook
     XLSX.writeFile(wb, 'Baccarat_Results_Strategy_Stats.xlsx');
 }
 
-// Dark Mode Toggle
 document.getElementById('toggle-dark-mode').addEventListener('click', function() {
     document.body.classList.toggle('dark-mode');
 });
