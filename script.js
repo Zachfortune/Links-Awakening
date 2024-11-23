@@ -94,168 +94,151 @@ class Strategy {
     }
 }
 
-const strategies = {
-    'The Cake': new Strategy('The Cake', ['B', 'B', 'P', 'B', 'B', 'P', 'P', 'B']),
-    'ZachFortune': new Strategy('ZachFortune', ['B', 'B', 'P', 'P', 'B', 'P', 'B']),
-    'Mr. Toad': new Strategy('Mr. Toad', ['P', 'B', 'P', 'B', 'P', 'B', 'P', 'B']),
-    'The Marcos': new Strategy('The Marcos', ['P', 'B', 'P', 'P', 'B', 'B']),
-    'Double Trouble': new Strategy('Double Trouble', ['B', 'B', 'P', 'P', 'B', 'B']),
-    'The Gentleman': new Strategy('The Gentleman', ['B', 'P', 'B', 'P', 'P', 'B', 'B', 'P']),
-    'Mr. Miyagi': new Strategy('Mr. Miyagi', ['P', 'P', 'P', 'B', 'B', 'P', 'P', 'P']),
-    'Animal Style': new Strategy('Animal Style', ['B', 'B', 'B', 'B', 'P', 'P', 'P', 'P']),
-    'Karate Chop': new Strategy('Karate Chop', ['B', 'P', 'B', 'P', 'B', 'P', 'B', 'P']),
-    'Snoop Dogg': new Strategy('Snoop Dogg', ['P', 'P', 'B', 'P', 'P', 'B', 'P', 'B', 'B']),
-    'The Safe Bet': new Strategy('The Safe Bet', ['P', 'P', 'B', 'B']),
-    'The Trend Follower': new Strategy('The Trend Follower', ['P', 'P', 'P', 'B', 'B']),
-    'The Reversal': new Strategy('The Reversal', ['B', 'P', 'P', 'B']),
-    'The Pincer': new Strategy('The Pincer', ['B', 'P', 'P', 'B', 'B', 'P']),
-    'The Edge Case': new Strategy('The Edge Case', ['P', 'B', 'P', 'P', 'B', 'P', 'B']),
-    'Grand Theft Auto': new Strategy('Grand Theft Auto', ['B', 'B', 'P'], true),
-};
-
-// Updated "Sliced Bread 🥖" Strategy
+// Updated "Sliced Bread 🥖" Strategy with Debugging Logs
 class SlicedBreadStrategy extends Strategy {
     constructor() {
         super('Sliced Bread 🥖', [], true);
-        this.phase = 1;
-        this.predictionSequence = [];
-        this.waitCount = 0;
-        this.previousResults = [];
+        this.phase = 1; // Start in Phase 1
+        this.predictionSequence = []; // Holds the current predictions
+        this.waitCount = 0; // Tracks how many hands to wait
+        this.previousResults = []; // Tracks the history of results for the strategy
     }
 
- predict() {
-    console.log("Phase:", this.phase, "Wait Count:", this.waitCount, "Previous Results:", this.previousResults);
-    if (this.phase === 1) {
-        if (this.previousResults.length < 3) {
-            console.log("Phase 1: WAIT for 3 results");
-            return "WAIT"; // Waiting for the first 3 results
-        }
-        if (this.waitCount > 0) {
-            console.log("Phase 1: WAIT after a win");
-            this.waitCount--;
-            return "WAIT"; // Wait for 1 hand after a win
-        }
-        console.log("Phase 1: Predicting last result:", this.previousResults[this.previousResults.length - 1]);
-        return this.previousResults[this.previousResults.length - 1]; // Default prediction: repeat last result
-    } else if (this.phase === 2) {
-        console.log("Phase 2: Generating 4-bet sequence");
-        if (this.previousResults.length < 2) {
-            console.log("Phase 2: WAIT for 2 results");
-            return "WAIT"; // Waiting for 2 results to generate the sequence
-        }
-        if (this.predictionSequence.length > 0) {
-            console.log("Phase 2: Predicting from sequence:", this.predictionSequence[0]);
-            return this.predictionSequence[0]; // Use the current prediction
-        }
-        // Log generated sequence
-        const [secondLast, last] = this.previousResults.slice(-2);
-        console.log("Last two results:", secondLast, last);
-        if (secondLast === 'P' && last === 'P') {
-            this.predictionSequence = ['P', 'B', 'B', 'B'];
-        } else if (secondLast === 'B' && last === 'B') {
-            this.predictionSequence = ['B', 'P', 'P', 'P'];
-        } else if (secondLast === 'P' && last === 'B') {
-            this.predictionSequence = ['P', 'P', 'B', 'P'];
-        } else if (secondLast === 'B' && last === 'P') {
-            this.predictionSequence = ['B', 'B', 'P', 'B'];
-        }
-        console.log("Generated sequence:", this.predictionSequence);
-        return this.predictionSequence[0];
-    }
-}
+    predict() {
+        console.log("Phase:", this.phase, "Wait Count:", this.waitCount, "Previous Results:", this.previousResults);
+        if (this.phase === 1) {
+            if (this.previousResults.length < 3) {
+                console.log("Phase 1: WAIT for 3 results");
+                return "WAIT"; // Waiting for the first 3 results
+            }
+            if (this.waitCount > 0) {
+                console.log("Phase 1: WAIT after a win");
+                this.waitCount--;
+                return "WAIT"; // Wait for 1 hand after a win
+            }
+            console.log("Phase 1: Predicting last result:", this.previousResults[this.previousResults.length - 1]);
+            return this.previousResults[this.previousResults.length - 1]; // Default prediction: repeat last result
+        } else if (this.phase === 2) {
+            console.log("Phase 2: Generating 4-bet sequence");
+            if (this.previousResults.length < 2) {
+                console.log("Phase 2: WAIT for 2 results");
+                return "WAIT"; // Waiting for 2 results to generate the sequence
+            }
+            if (this.predictionSequence.length > 0) {
+                console.log("Phase 2: Predicting from sequence:", this.predictionSequence[0]);
+                return this.predictionSequence[0]; // Use the current prediction
+            }
 
-
-update(result) {
-    console.log("Updating with result:", result);
-    if (result === 'T') {
-        console.log("Ignoring tie");
-        return; // Ignore ties
+            const [secondLast, last] = this.previousResults.slice(-2);
+            console.log("Last two results:", secondLast, last);
+            if (secondLast === 'P' && last === 'P') {
+                this.predictionSequence = ['P', 'B', 'B', 'B'];
+            } else if (secondLast === 'B' && last === 'B') {
+                this.predictionSequence = ['B', 'P', 'P', 'P'];
+            } else if (secondLast === 'P' && last === 'B') {
+                this.predictionSequence = ['P', 'P', 'B', 'P'];
+            } else if (secondLast === 'B' && last === 'P') {
+                this.predictionSequence = ['B', 'B', 'P', 'B'];
+            }
+            console.log("Generated sequence:", this.predictionSequence);
+            return this.predictionSequence[0];
+        }
     }
 
-    this.previousResults.push(result);
-    console.log("Previous results updated:", this.previousResults);
+    update(result) {
+        console.log("Updating with result:", result);
+        if (result === 'T') {
+            console.log("Ignoring tie");
+            return; // Ignore ties
+        }
 
-    if (this.previousResults.length > 50) {
-        this.previousResults.shift(); // Prevent memory overflow
-    }
+        this.previousResults.push(result);
+        console.log("Previous results updated:", this.previousResults);
 
-    const prediction = this.predict();
-    console.log("Current prediction:", prediction);
+        if (this.previousResults.length > 50) {
+            this.previousResults.shift(); // Prevent memory overflow
+        }
 
-    if (this.phase === 1) {
-        if (this.previousResults.length >= 3) {
+        const prediction = this.predict();
+        console.log("Current prediction:", prediction);
+
+        if (this.phase === 1) {
+            if (this.previousResults.length >= 3) {
+                if (prediction === result) {
+                    console.log("Phase 1: Win detected");
+                    this.wins++;
+                    this.currentWinStreak++;
+                    this.currentLossStreak = 0;
+                    this.maxWinStreak = Math.max(this.maxWinStreak, this.currentWinStreak);
+                    this.waitCount = 1; // Enter "WAIT" state for 1 hand after a win
+                } else if (prediction !== "WAIT") {
+                    console.log("Phase 1: Loss detected");
+                    this.losses++;
+                    this.currentLossStreak++;
+                    this.currentWinStreak = 0;
+                    this.maxLossStreak = Math.max(this.maxLossStreak, this.currentLossStreak);
+
+                    if (this.predictionSequence.length < 3) {
+                        this.predictionSequence.push(result);
+                    } else {
+                        this.predictionSequence = [result === 'P' ? 'B' : 'P'];
+                        this.phase = 2; // Transition to Phase 2
+                        console.log("Transitioning to Phase 2");
+                    }
+                }
+            }
+        } else if (this.phase === 2) {
             if (prediction === result) {
-                console.log("Phase 1: Win detected");
+                console.log("Phase 2: Win detected");
                 this.wins++;
                 this.currentWinStreak++;
                 this.currentLossStreak = 0;
                 this.maxWinStreak = Math.max(this.maxWinStreak, this.currentWinStreak);
-                this.waitCount = 1; // Enter "WAIT" state for 1 hand after a win
+                this.phase = 1; // Reset to Phase 1 after a win
+                this.predictionSequence = [];
             } else if (prediction !== "WAIT") {
-                console.log("Phase 1: Loss detected");
+                console.log("Phase 2: Loss detected");
                 this.losses++;
                 this.currentLossStreak++;
                 this.currentWinStreak = 0;
                 this.maxLossStreak = Math.max(this.maxLossStreak, this.currentLossStreak);
+                this.predictionSequence.shift(); // Remove the current prediction
 
-                if (this.predictionSequence.length < 3) {
-                    this.predictionSequence.push(result);
-                } else {
-                    this.predictionSequence = [result === 'P' ? 'B' : 'P'];
-                    this.phase = 2; // Transition to Phase 2
-                    console.log("Transitioning to Phase 2");
+                if (this.predictionSequence.length === 0) {
+                    this.phase = 1; // Reset to Phase 1 if sequence is exhausted
+                    console.log("Phase 2 sequence exhausted. Resetting to Phase 1");
                 }
-            }
-        }
-    } else if (this.phase === 2) {
-        if (prediction === result) {
-            console.log("Phase 2: Win detected");
-            this.wins++;
-            this.currentWinStreak++;
-            this.currentLossStreak = 0;
-            this.maxWinStreak = Math.max(this.maxWinStreak, this.currentWinStreak);
-            this.phase = 1; // Reset to Phase 1 after a win
-            this.predictionSequence = [];
-        } else if (prediction !== "WAIT") {
-            console.log("Phase 2: Loss detected");
-            this.losses++;
-            this.currentLossStreak++;
-            this.currentWinStreak = 0;
-            this.maxLossStreak = Math.max(this.maxLossStreak, this.currentLossStreak);
-            this.predictionSequence.shift(); // Remove the current prediction
-
-            if (this.predictionSequence.length === 0) {
-                this.phase = 1; // Reset to Phase 1 if sequence is exhausted
-                console.log("Phase 2 sequence exhausted. Resetting to Phase 1");
             }
         }
     }
 }
 
-
 strategies['Sliced Bread 🥖'] = new SlicedBreadStrategy();
-
-// Remaining functions: recordResult, updateDisplay, and export logic
 let history = [];
 let playerCount = 0;
 let bankerCount = 0;
 let tieCount = 0;
 
 function recordResult(result) {
+    console.log("Recording result:", result);
     history.push(result);
     recalculateStats();
     updateDisplay();
 }
 
 function deleteLastHand() {
-    if (history.length === 0) return;
-
+    if (history.length === 0) {
+        console.log("No hands to delete");
+        return;
+    }
+    console.log("Deleting last hand:", history[history.length - 1]);
     history.pop();
     recalculateStats();
     updateDisplay();
 }
 
 function recalculateStats() {
+    console.log("Recalculating stats...");
     // Reset counts and strategies
     playerCount = 0;
     bankerCount = 0;
@@ -275,14 +258,20 @@ function recalculateStats() {
             strategies[strategy].update(result);
         }
     }
+    console.log("Stats recalculated:", {
+        playerCount,
+        bankerCount,
+        tieCount
+    });
 }
 
 function updateDisplay() {
+    console.log("Updating display...");
     updateHistory();
     updatePredictions();
     updateStrategyStats();
     updateCountBoxes();
-    updateMobileView(); // Ensure mobile view updates in real-time
+    updateMobileView();
 }
 
 function updateHistory() {
@@ -292,6 +281,7 @@ function updateHistory() {
     history.forEach((result, index) => {
         handResults.innerHTML += `<p>Hand ${index + 1}: ${result}</p>`;
     });
+    console.log("Hand results updated");
 }
 
 function updatePredictions() {
@@ -306,6 +296,7 @@ function updatePredictions() {
     }
 
     predictionResults.innerHTML = predictionsHTML;
+    console.log("Predictions updated");
 }
 
 function updateStrategyStats() {
@@ -354,12 +345,18 @@ function updateStrategyStats() {
     }
 
     strategyStats.innerHTML = statsHTML;
+    console.log("Strategy stats updated");
 }
 
 function updateCountBoxes() {
     document.getElementById('player-count-box').innerText = playerCount;
     document.getElementById('banker-count-box').innerText = bankerCount;
     document.getElementById('tie-count-box').innerText = tieCount;
+    console.log("Count boxes updated:", {
+        playerCount,
+        bankerCount,
+        tieCount
+    });
 }
 
 function toggleMobileView() {
@@ -374,6 +371,7 @@ function toggleMobileView() {
         mobileView.style.display = 'block';
         updateMobileView();
     }
+    console.log("Mobile view toggled");
 }
 
 function updateMobileView() {
@@ -400,6 +398,7 @@ function updateMobileView() {
 
     tableHTML += `</tbody></table>`;
     strategyStatsMobile.innerHTML = tableHTML;
+    console.log("Mobile view stats updated");
 }
 
 function exportToSpreadsheet() {
@@ -430,8 +429,10 @@ function exportToSpreadsheet() {
     XLSX.utils.book_append_sheet(wb, strategyStatsSheet, 'Strategy Stats');
 
     XLSX.writeFile(wb, 'Baccarat_Results_Strategy_Stats.xlsx');
+    console.log("Spreadsheet exported");
 }
 
 document.getElementById('toggle-dark-mode').addEventListener('click', function() {
     document.body.classList.toggle('dark-mode');
+    console.log("Dark mode toggled");
 });
